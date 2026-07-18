@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Documentation & Backup Photos
+PRD.md
+design.md
+photos/
