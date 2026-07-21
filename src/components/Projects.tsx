@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ExternalLink, Code2 } from "lucide-react";
+import { ExternalLink, Code2, X, BarChart3, TrendingUp, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ProjectItem {
@@ -12,6 +12,7 @@ interface ProjectItem {
   demo: string;
   demoLabelID: string;
   demoLabelEN: string;
+  hasCaseStudy?: boolean;
 }
 
 interface ProjectsProps {
@@ -20,6 +21,7 @@ interface ProjectsProps {
 
 export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
   const [filter, setFilter] = useState<"all" | "data" | "web" | "utility">("all");
+  const [selectedProject, setSelectedProject] = useState<ProjectItem | null>(null);
 
   const projectsList: ProjectItem[] = [
     {
@@ -49,11 +51,12 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       descriptionID: "Riset analisis sentimen berita olahraga nasional menggunakan model XGBoost Regressor berbasis Python untuk memprediksi tren kesehatan masyarakat guna mendukung akselerasi infrastruktur olahraga.",
       descriptionEN: "Research on national sports news sentiment analysis using a Python-based XGBoost Regressor model to predict public health trends for supporting sports infrastructure development.",
       category: "data",
-      badges: ["Data Science", "Python", "XGBoost Regressor", "Predictive Modeling"],
+      badges: ["Data Science", "Python", "XGBoost Regressor", "Predictive Modeling", "SHAP Interpretation"],
       github: "https://github.com/ahdfaarhaan",
       demo: "https://colab.research.google.com",
       demoLabelID: "Google Colab",
-      demoLabelEN: "Google Colab"
+      demoLabelEN: "Google Colab",
+      hasCaseStudy: true
     },
     {
       title: "Prediksi Mahasiswa Dropout Klasifikasi",
@@ -219,7 +222,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
           </div>
         </div>
 
-        {/* Right Column: Wide Editorial List Layout (No Slideshow, High Precision) */}
+        {/* Right Column: Wide Editorial List Layout */}
         <div className="lg:col-span-8 w-full">
           <AnimatePresence mode="wait">
             <motion.div
@@ -231,7 +234,6 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
               className="flex flex-col gap-10 w-full"
             >
               {filteredProjects.map((project, index) => {
-                // Formatted index number, e.g., 01, 02
                 const projectIndex = String(index + 1).padStart(2, "0");
                 const categoryLabel = 
                   project.category === "data" 
@@ -245,7 +247,6 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
                     key={project.title}
                     className="border-t border-brand-rose-dust/30 dark:border-brand-plum-muted/20 pt-6 flex flex-col gap-4 text-left group"
                   >
-                    {/* Index & Category Label */}
                     <div className="flex justify-between items-center font-mono text-xs text-neutral-400">
                       <span className="text-brand-lavender-soft dark:text-brand-lavender-bright font-bold">
                         #{projectIndex}
@@ -253,12 +254,10 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
                       <span>{categoryLabel}</span>
                     </div>
 
-                    {/* Project Title (Wide & Bold) */}
                     <h3 className="font-display font-bold text-xl sm:text-2xl text-neutral-900 dark:text-neutral-50 uppercase tracking-tight leading-tight transition-colors group-hover:text-brand-lavender-soft dark:group-hover:text-brand-lavender-bright">
                       {project.title}
                     </h3>
 
-                    {/* Badges List */}
                     <div className="flex flex-wrap gap-1.5">
                       {project.badges.map((badge, bIndex) => (
                         <span 
@@ -270,13 +269,18 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
                       ))}
                     </div>
 
-                    {/* Description Paragraph */}
                     <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 font-sans leading-relaxed">
                       {lang === "id" ? project.descriptionID : project.descriptionEN}
                     </p>
 
-                    {/* CTA Links */}
-                    <div className="flex gap-6 font-mono text-xs pt-2">
+                    <div className="flex flex-wrap gap-6 font-mono text-xs pt-2">
+                      <button
+                        onClick={() => setSelectedProject(project)}
+                        className="flex items-center gap-1.5 hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors font-bold text-left cursor-pointer border-b border-transparent hover:border-brand-lavender-soft dark:hover:border-brand-lavender-bright"
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                        <span>{lang === "id" ? "Lihat Analisis Riset" : "View Case Study"}</span>
+                      </button>
                       <a 
                         href={project.github} 
                         target="_blank" 
@@ -304,6 +308,191 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
         </div>
 
       </div>
+
+      {/* Case Study Modal Overlay */}
+      <AnimatePresence>
+        {selectedProject && (
+          <div className="fixed inset-0 bg-neutral-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 30 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-y-auto shadow-2xl flex flex-col relative text-left"
+            >
+              <div className="sticky top-0 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 p-6 flex justify-between items-center z-10">
+                <div>
+                  <span className="font-mono text-xs tracking-wider text-brand-lavender-soft dark:text-brand-lavender-bright uppercase block mb-1">
+                    {lang === "id" ? "Detail Analisis Proyek" : "Project Analysis Details"}
+                  </span>
+                  <h3 className="font-display font-bold text-xl sm:text-2xl text-neutral-900 dark:text-neutral-50 uppercase tracking-tight">
+                    {selectedProject.title}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-6 sm:p-8 flex flex-col gap-8">
+                {selectedProject.hasCaseStudy ? (
+                  <div className="flex flex-col gap-8">
+                    <div>
+                      <h4 className="font-display font-bold text-lg text-neutral-900 dark:text-neutral-50 uppercase mb-3 flex items-center gap-2">
+                        <TrendingUp className="w-5 h-5 text-brand-lavender-soft dark:text-brand-lavender-bright" />
+                        {lang === "id" ? "Abstrak & Latar Belakang" : "Abstract & Background"}
+                      </h4>
+                      <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed text-justify">
+                        {lang === "id" ? (
+                          <>
+                            Penelitian ini menganalisis sentimen berita olahraga nasional berbahasa Indonesia untuk memprediksi <strong>skor tren kesehatan masyarakat</strong> (kontinu 0–100). Dengan mengekstrak data teks berita olahraga menggunakan <strong>TF-IDF Vectorizer</strong> (5.000 fitur) dan seleksi fitur <strong>SelectKBest (F-Regression)</strong> ke 1.000 fitur, model <strong>XGBoost Regressor</strong> dilatih untuk memprediksi fluktuasi minat dan sentimen publik terhadap aktivitas olahraga.
+                          </>
+                        ) : (
+                          <>
+                            This research analyzes the sentiment of Indonesian national sports news to predict <strong>public health trend scores</strong> (continuous scale 0–100). By extracting sports news text using a <strong>TF-IDF Vectorizer</strong> (5,000 features) and performing feature selection via <strong>SelectKBest (F-Regression)</strong> down to 1,000 features, an <strong>XGBoost Regressor</strong> model was trained to predict variations in public interest and sentiment towards physical fitness and athletic activities.
+                          </>
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="border border-neutral-200 dark:border-neutral-800 rounded-xl p-6 bg-neutral-50 dark:bg-neutral-950/50 flex flex-col gap-4">
+                      <h4 className="font-mono text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                        <Info className="w-4 h-4 text-brand-lavender-soft dark:text-brand-lavender-bright" />
+                        {lang === "id" ? "Metrik Evaluasi Performa Model" : "Model Performance Evaluation Metrics"}
+                      </h4>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        <div className="bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                          <span className="block text-[10px] font-mono text-neutral-400">MSE</span>
+                          <span className="block text-lg font-display font-bold text-neutral-900 dark:text-neutral-100">266.9614</span>
+                        </div>
+                        <div className="bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                          <span className="block text-[10px] font-mono text-neutral-400">RMSE</span>
+                          <span className="block text-lg font-display font-bold text-neutral-900 dark:text-neutral-100">16.3390</span>
+                        </div>
+                        <div className="bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                          <span className="block text-[10px] font-mono text-neutral-400">MAE</span>
+                          <span className="block text-lg font-display font-bold text-neutral-900 dark:text-neutral-100">10.6259</span>
+                        </div>
+                        <div className="bg-white dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800">
+                          <span className="block text-[10px] font-mono text-neutral-400">R² SCORE</span>
+                          <span className="block text-lg font-display font-bold text-brand-lavender-soft dark:text-brand-lavender-bright">0.3971</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-neutral-400 italic">
+                        {lang === "id" ? "* R² Score 0.3971 menunjukkan model mampu menerangkan ~40% variabilitas tren kesehatan masyarakat murni dari ulasan teks berita olahraga." : "* R² Score of 0.3971 indicates that the model explains ~40% of the public health trend variability purely from sports news text reviews."}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                      <h4 className="font-display font-bold text-lg text-neutral-900 dark:text-neutral-50 uppercase">
+                        {lang === "id" ? "Visualisasi Hasil Riset" : "Research Visualizations"}
+                      </h4>
+                      
+                      <div className="flex flex-col gap-3 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 bg-white dark:bg-neutral-950">
+                        <span className="font-mono text-xs font-bold text-neutral-400">
+                          {lang === "id" ? "1. PENTINGNYA FITUR (FEATURE IMPORTANCE)" : "1. FEATURE IMPORTANCE"}
+                        </span>
+                        <div className="w-full rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-white p-2">
+                           <img 
+                             src="/images/projects/feature_importance.png" 
+                             alt="Feature Importance Chart" 
+                             className="w-full max-h-[350px] object-contain rounded"
+                           />
+                        </div>
+                        <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed text-justify">
+                          {lang === "id" ? "Grafik di atas menunjukkan 20 fitur (kata kunci) yang paling berpengaruh secara global bagi XGBoost Regressor dalam memprediksi tren kesehatan." : "The above chart visualizes the top 20 features (keywords) that globally influence the XGBoost Regressor's health trend predictions."}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col gap-3 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 bg-white dark:bg-neutral-950">
+                        <span className="font-mono text-xs font-bold text-neutral-400">
+                          {lang === "id" ? "2. ANALISIS SHAP BEESWARM PLOT (INTERPRETABILITAS MODEL)" : "2. SHAP SUMMARY BEESWARM PLOT (MODEL INTERPRETABILITY)"}
+                        </span>
+                        <div className="w-full rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 bg-white p-2">
+                           <img 
+                             src="/images/projects/shap_summary.png" 
+                             alt="SHAP Summary Plot" 
+                             className="w-full max-h-[350px] object-contain rounded"
+                           />
+                        </div>
+                        <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed text-justify">
+                          {lang === "id" ? "Plot lebah (Beeswarm) SHAP menunjukkan kontribusi searah dari setiap kata terhadap prediksi tren kesehatan." : "The SHAP Beeswarm plot maps the directional contribution of each keyword to the health trend prediction."}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-display font-bold text-lg text-neutral-900 dark:text-neutral-50 uppercase mb-3">
+                        {lang === "id" ? "Rekomendasi Kebijakan & Infrastruktur (Fokus Riau)" : "Policy & Infrastructure Recommendations (Riau Focus)"}
+                      </h4>
+                      <ul className="list-disc pl-5 text-sm sm:text-base text-neutral-600 dark:text-neutral-300 flex flex-col gap-2">
+                        {lang === "id" ? (
+                          <>
+                            <li><strong>Pembangunan Lapangan Mini Soccer:</strong> Memenuhi antusiasme komunitas terhadap sepak bola.</li>
+                            <li><strong>Penyediaan Lapangan Badminton Komunitas:</strong> Mengakomodasi minat olahraga paling konsisten masyarakat.</li>
+                            <li><strong>Pembangunan Fasilitas Outdoor Gym:</strong> Menekan tingkat ketidakaktifan fisik masyarakat umum.</li>
+                          </>
+                        ) : (
+                          <>
+                            <li><strong>Neighborhood Mini Soccer Fields:</strong> Addressing community enthusiasm for football.</li>
+                            <li><strong>Community Badminton Courts:</strong> Accommodating the most consistent interest in sports.</li>
+                            <li><strong>Outdoor Gym Facilities in Public Parks:</strong> Combating physical inactivity in the general public.</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <p className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed text-justify">
+                      {lang === "id" ? selectedProject.descriptionID : selectedProject.descriptionEN}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {selectedProject.badges.map((badge, bIndex) => (
+                        <span 
+                          key={bIndex} 
+                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-brand-rose-soft/30 dark:bg-brand-plum-charcoal/30 text-neutral-600 dark:text-neutral-300 border border-brand-rose-dust/20 dark:border-brand-plum-muted/10"
+                        >
+                          {badge}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6 mt-4">
+                      <p className="text-xs text-neutral-400 italic">
+                        {lang === "id" ? "* Dokumentasi analisis riset selengkapnya untuk proyek ini dapat Anda tinjau langsung melalui tombol tautan Source Code di bawah." : "* The complete case study documentation for this project is available on the GitHub repository linked below."}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="sticky bottom-0 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 p-6 flex flex-wrap gap-4 justify-end z-10">
+                <a 
+                  href={selectedProject.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-1.5 hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors font-bold text-xs font-mono bg-neutral-100 dark:bg-neutral-800 px-4 py-2.5 rounded-lg text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700"
+                >
+                  <Code2 className="w-4 h-4" />
+                  <span>Source Code</span>
+                </a>
+                <a 
+                  href={selectedProject.demo} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-1.5 bg-brand-lavender-soft text-white hover:bg-brand-lavender-soft/90 dark:bg-brand-lavender-bright dark:hover:bg-brand-lavender-bright/95 transition-colors font-bold text-xs font-mono px-4 py-2.5 rounded-lg"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>{lang === "id" ? selectedProject.demoLabelID : selectedProject.demoLabelEN}</span>
+                </a>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
