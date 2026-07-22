@@ -53,7 +53,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "data",
       badges: ["Data Science", "Python", "XGBoost Regressor", "Predictive Modeling", "SHAP Interpretation"],
       github: "https://github.com/ahdfaarhaan",
-      demo: "https://colab.research.google.com",
+      demo: "https://colab.research.google.com/drive/1Xiz1-UHPmQMVW2T3fnpvyNSe7G-No0-M?usp=sharing",
       demoLabelID: "Google Colab",
       demoLabelEN: "Google Colab",
       hasCaseStudy: true
@@ -65,7 +65,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "data",
       badges: ["Machine Learning", "Random Forest", "Logistic Regression", "Academic Analytics"],
       github: "https://github.com/ahdfaarhaan",
-      demo: "https://colab.research.google.com",
+      demo: "https://colab.research.google.com/drive/1zbvh-p3AlsI6b8O8IMqiLgKxMaBi69hY?usp=sharing",
       demoLabelID: "Google Colab",
       demoLabelEN: "Google Colab"
     },
@@ -81,37 +81,15 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       demoLabelEN: "Project Demo"
     },
     {
-      title: "barokahgroup-web",
-      descriptionID: "Aplikasi profil operasional web untuk manajemen Barokah Group, menyediakan sistem pemesanan terpadu kurir jastip dan integrasi basis data pelanggan.",
-      descriptionEN: "A business profile web application for Barokah Group, providing an integrated shipping booking system and customer database integration.",
-      category: "web",
-      badges: ["Web Development", "Frontend", "Database"],
+      title: "Klasifikasi Email Spam NLP",
+      descriptionID: "Studi komparasi NLP untuk mendeteksi email spam dengan membandingkan tingkat presisi akurasi pengenalan teks antara model SVM (Linear Kernel) dengan Logistic Regression.",
+      descriptionEN: "A comparative NLP study for spam email detection, comparing text classification accuracy between an SVM (Linear Kernel) and Logistic Regression model.",
+      category: "data",
+      badges: ["NLP", "Text Classification", "SVM", "Logistic Regression"],
       github: "https://github.com/ahdfaarhaan",
-      demo: "https://github.com/ahdfaarhaan",
-      demoLabelID: "Demo Proyek",
-      demoLabelEN: "Project Demo"
-    },
-    {
-      title: "minority website (Powerlifting Landing)",
-      descriptionID: "Desain dan implementasi landing page eksklusif untuk profil komunitas atlet angkat beban (Powerlifting), menonjolkan visual atletik yang agresif dan responsif.",
-      descriptionEN: "Design and implementation of an exclusive landing page for a weightlifting (Powerlifting) community profile, featuring aggressive, responsive athletic visuals.",
-      category: "web",
-      badges: ["Tailwind CSS", "Community Platform", "UI/UX Design"],
-      github: "https://github.com/ahdfaarhaan",
-      demo: "https://github.com/ahdfaarhaan",
-      demoLabelID: "Demo Proyek",
-      demoLabelEN: "Project Demo"
-    },
-    {
-      title: "teszta-world-web (Clothing Brand)",
-      descriptionID: "Website e-commerce showcase portofolio interaktif untuk katalog brand clothing lokal asal Bandung dengan penekanan pada micro-interactions dan tata letak kreatif.",
-      descriptionEN: "An interactive e-commerce showcase website for a Bandung-based clothing brand catalog, focusing on micro-interactions and creative layout.",
-      category: "web",
-      badges: ["E-Commerce Showcase", "Frontend Dev", "Creative Design"],
-      github: "https://github.com/ahdfaarhaan",
-      demo: "https://github.com/ahdfaarhaan",
-      demoLabelID: "Demo Proyek",
-      demoLabelEN: "Project Demo"
+      demo: "https://colab.research.google.com",
+      demoLabelID: "Google Colab",
+      demoLabelEN: "Google Colab"
     },
     {
       title: "Sistem Rekomendasi Buku Hybrid",
@@ -125,6 +103,39 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       demoLabelEN: "Google Colab"
     },
     {
+      title: "barokahgroup-web",
+      descriptionID: "Aplikasi profil operasional web untuk manajemen Barokah Group, menyediakan sistem pemesanan terpadu kurir jastip dan integrasi basis data pelanggan.",
+      descriptionEN: "A business profile web application for Barokah Group, providing an integrated shipping booking system and customer database integration.",
+      category: "web",
+      badges: ["Web Development", "Frontend", "Database"],
+      github: "https://github.com/ahdfaarhaan",
+      demo: "https://github.com/ahdfaarhaan",
+      demoLabelID: "Demo Proyek",
+      demoLabelEN: "Project Demo"
+    },
+    {
+      title: "sadboypku-web (SaaS Playbox Booking)",
+      descriptionID: "Platform SaaS sistem manajemen penjadwalan dan reservasi booking arena playbox secara real-time untuk pengguna.",
+      descriptionEN: "A real-time SaaS reservation and scheduling platform for users to book playbox arena sessions online.",
+      category: "web",
+      badges: ["SaaS Platform", "Booking System", "Realtime Scheduling"],
+      github: "https://github.com/ahdfaarhaan",
+      demo: "https://github.com/ahdfaarhaan",
+      demoLabelID: "Demo Proyek",
+      demoLabelEN: "Project Demo"
+    },
+    {
+      title: "sbh-construction",
+      descriptionID: "Website profil perusahaan jasa konstruksi & pembangunan infrastruktur dengan etalase proyek dan sistem pengajuan penawaran.",
+      descriptionEN: "Corporate profile website for construction & infrastructure services featuring project showcases and quotation request systems.",
+      category: "web",
+      badges: ["Corporate Web", "Construction Showcase", "Infrastructure Tech"],
+      github: "https://github.com/ahdfaarhaan",
+      demo: "https://github.com/ahdfaarhaan",
+      demoLabelID: "Demo Proyek",
+      demoLabelEN: "Project Demo"
+    },
+    {
       title: "swole-planner",
       descriptionID: "Aplikasi produktivitas dan penjadwalan latihan fisik/gym terstruktur untuk mencatat rutinitas angkatan beban serta mencatat perkembangan rekor personal (PR).",
       descriptionEN: "A structured fitness productivity and workout planning application to log strength routines and track personal records (PR).",
@@ -136,15 +147,15 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       demoLabelEN: "Project Demo"
     },
     {
-      title: "Klasifikasi Email Spam NLP",
-      descriptionID: "Studi komparasi NLP untuk mendeteksi email spam dengan membandingkan tingkat presisi akurasi pengenalan teks antara model SVM (Linear Kernel) dengan Logistic Regression.",
-      descriptionEN: "A comparative NLP study for spam email detection, comparing text classification accuracy between an SVM (Linear Kernel) and Logistic Regression model.",
-      category: "data",
-      badges: ["NLP", "Text Classification", "SVM", "Data Science"],
+      title: "readnmove",
+      descriptionID: "Aplikasi produktivitas dan pelacakan membaca & aktivitas fisik interaktif untuk mendukung gaya hidup aktif.",
+      descriptionEN: "An interactive reading and physical activity tracking application designed to encourage an active lifestyle.",
+      category: "utility",
+      badges: ["Productivity App", "Reading Tracker", "Fitness Integration"],
       github: "https://github.com/ahdfaarhaan",
-      demo: "https://colab.research.google.com",
-      demoLabelID: "Google Colab",
-      demoLabelEN: "Google Colab"
+      demo: "https://github.com/ahdfaarhaan",
+      demoLabelID: "Demo Proyek",
+      demoLabelEN: "Project Demo"
     },
     {
       title: "halaman portofolio alif-parcel",
