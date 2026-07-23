@@ -87,7 +87,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "data",
       badges: ["NLP", "Text Classification", "SVM", "Logistic Regression"],
       github: "https://github.com/ahdfarhaan0852/hai-farhan-here",
-      demo: "https://colab.research.google.com/drive/1I0jz-PBsSgo4NDNuSLxw11F60C4wFQys?usp=sharing",
+      demo: "https://colab.research.google.com/drive/1M1Ep1tuBAAxB3-LQaHZ0RKNOaOj60QAq?usp=sharing",
       demoLabelID: "Google Colab",
       demoLabelEN: "Google Colab"
     },
@@ -98,7 +98,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "data",
       badges: ["Recommendation System", "Hybrid Models", "Python", "Data Science"],
       github: "https://github.com/ahdfarhaan0852/hai-farhan-here",
-      demo: "https://colab.research.google.com/drive/1pEowoh3K41_3FjUeQCl2-Eb7nt5_UDJQ?usp=sharing",
+      demo: "https://colab.research.google.com/drive/14ZmYBGphUk94Ro2Lds5Y7-yuJpyBbiLa?usp=sharing",
       demoLabelID: "Google Colab",
       demoLabelEN: "Google Colab"
     },
