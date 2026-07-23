@@ -1,10 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight } from "lucide-react";
-import * as THREE from "three";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,164 +26,13 @@ interface Projects3DGridProps {
   onSelectProject: (project: ProjectItem) => void;
 }
 
-// Compact 3D Card following Mohit Virli's Awwwards aesthetic
-const Card3D: React.FC<{
-  project: ProjectItem;
-  targetPosition: [number, number, number];
-  lang: "id" | "en";
-  onSelect: (project: ProjectItem) => void;
-}> = ({ project, targetPosition, lang, onSelect }) => {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <group position={targetPosition}>
-      <Html
-        transform
-        distanceFactor={45}
-        zIndexRange={[100, 0]}
-        className="pointer-events-auto"
-      >
-        <div
-          onClick={() => onSelect(project)}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          className={`w-[260px] sm:w-[290px] p-5 rounded-xl cursor-pointer transition-all duration-300 transform-gpu select-none text-left backdrop-blur-md border ${
-            hovered
-              ? "scale-[1.05] -translate-y-2 bg-neutral-900/95 border-white/50 shadow-2xl shadow-black/90 ring-1 ring-white/30"
-              : "scale-100 bg-neutral-950/85 border-white/10 shadow-xl shadow-black/70 hover:border-white/20"
-          }`}
-        >
-          {/* Top Date Badge & Category */}
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-serif italic text-xs tracking-widest text-neutral-300 font-semibold border-b border-white/20 pb-0.5">
-              {project.dateBadge}
-            </span>
-            <span className="font-mono text-[9px] text-neutral-400 uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">
-              {project.category}
-            </span>
-          </div>
-
-          {/* Project Title */}
-          <h3 className="font-display font-bold text-base text-white tracking-tight uppercase leading-snug mb-2 line-clamp-2">
-            {project.title}
-          </h3>
-
-          {/* Description snippet */}
-          <p className="text-xs text-neutral-400 font-sans line-clamp-2 leading-relaxed mb-4">
-            {lang === "id" ? project.descriptionID : project.descriptionEN}
-          </p>
-
-          {/* Tech Badges */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {project.badges.slice(0, 3).map((badge, i) => (
-              <span
-                key={i}
-                className="text-[9px] font-mono text-neutral-400 bg-neutral-900 border border-white/10 px-2 py-0.5 rounded-sm"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-
-          {/* Bottom Link Action */}
-          <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs font-mono text-neutral-300">
-            <span className="text-white font-medium group-hover:underline inline-flex items-center gap-1">
-              <span>{lang === "id" ? "Lihat Detail" : "View Case Study"}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-neutral-400" />
-            </span>
-            <span className="text-neutral-500 text-[9px] uppercase tracking-wider">↗ Click</span>
-          </div>
-        </div>
-      </Html>
-    </group>
-  );
-};
-
-// 3D Camera & Grid Rig Controller Driven by GSAP ScrollTrigger
-const SceneRig: React.FC<{
-  projects: ProjectItem[];
-  lang: "id" | "en";
-  onSelectProject: (project: ProjectItem) => void;
-}> = ({ projects, lang, onSelectProject }) => {
-  const { camera } = useThree();
-  const groupRef = useRef<THREE.Group>(null);
-
-  useEffect(() => {
-    // Initial camera position & overview angle
-    camera.position.set(0, 1, 28);
-    camera.lookAt(0, -3, 0);
-
-    const trigger = ScrollTrigger.create({
-      trigger: "#projects-3d-wrapper",
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1.2,
-      onUpdate: (self) => {
-        const progress = self.progress;
-
-        // Smooth camera glide down through the project grid as user scrolls
-        gsap.to(camera.position, {
-          x: Math.sin(progress * Math.PI * 0.5) * 4,
-          y: 1 - progress * 40,
-          z: 28 - progress * 32,
-          duration: 0.4,
-          ease: "power1.out",
-          overwrite: "auto"
-        });
-
-        if (groupRef.current) {
-          gsap.to(groupRef.current.rotation, {
-            x: 0.18 - progress * 0.08,
-            y: -0.22 + progress * 0.12,
-            z: 0.04 - progress * 0.02,
-            duration: 0.4,
-            ease: "power1.out",
-            overwrite: "auto"
-          });
-        }
-      }
-    });
-
-    return () => {
-      trigger.kill();
-    };
-  }, [camera]);
-
-  // Wide, spacious 3D grid layout across 100vw
-  const columns = 3;
-  const spacingX = 14.5; // Wide horizontal gap to fill screen edge-to-edge comfortably
-  const spacingY = 9.5;  // Generous vertical row gap
-  const spacingZ = 6.0;  // Deep Z depth staggering
-
-  return (
-    <group ref={groupRef} rotation={[0.18, -0.22, 0.04]}>
-      {projects.map((project, index) => {
-        const col = index % columns;
-        const row = Math.floor(index / columns);
-
-        const x = (col - (columns - 1) / 2) * spacingX;
-        const y = -row * spacingY;
-        const z = -row * spacingZ + col * 1.2;
-
-        return (
-          <Card3D
-            key={index}
-            project={project}
-            targetPosition={[x, y, z]}
-            lang={lang}
-            onSelect={onSelectProject}
-          />
-        );
-      })}
-    </group>
-  );
-};
-
 export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
   projects,
   lang,
   onSelectProject
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<"all" | "data" | "web" | "utility">("all");
 
   const filteredProjects = projects.filter((p) => {
@@ -193,27 +40,58 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
     return p.category === filter;
   });
 
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    // GSAP ScrollTrigger 3D Slanted Perspective Progression
+    const trigger = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1.2,
+      onUpdate: (self) => {
+        const progress = self.progress;
+
+        // 3D Perspective Plane Tilt & Fly-Through Translation
+        gsap.to(grid, {
+          rotateX: 16 - progress * 12,
+          rotateY: -14 + progress * 16,
+          rotateZ: 3 - progress * 4,
+          translateY: -progress * 600,
+          translateZ: progress * 120,
+          duration: 0.4,
+          ease: "power1.out",
+          overwrite: "auto"
+        });
+      }
+    });
+
+    return () => trigger.kill();
+  }, []);
+
   return (
     <div
+      ref={containerRef}
       id="projects-3d-wrapper"
-      className="relative w-full h-[360vh] bg-[#08080a] text-white overflow-hidden"
+      className="relative w-full min-h-[300vh] bg-[#08080a] text-white overflow-hidden"
     >
-      {/* Sticky Fullscreen 3D Viewport Header */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none z-10">
+      {/* Sticky Fullscreen 3D Viewport Controls */}
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none z-30">
         
         {/* Header Title & Filter Buttons */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pointer-events-auto pt-20 sm:pt-6 z-20">
-          <div className="text-left bg-neutral-950/80 backdrop-blur-md p-4 rounded-2xl border border-white/10">
+          <div className="text-left bg-neutral-950/90 backdrop-blur-xl p-5 rounded-2xl border border-white/10 shadow-2xl">
             <span className="font-mono text-xs tracking-widest text-neutral-400 uppercase mb-1 block">
               // {lang === "id" ? "Katalog Proyek 3D" : "3D Side Projects Grid"}
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight uppercase">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight uppercase leading-none">
               {lang === "id" ? "Katalog Proyek." : "Side Projects."}
             </h2>
           </div>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-neutral-900/90 backdrop-blur-md border border-white/10 shadow-2xl">
+          <div className="flex flex-wrap gap-2 p-1.5 rounded-xl bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl">
             {[
               { id: "all", labelID: "Semua", labelEN: "All" },
               { id: "data", labelID: "Data & AI", labelEN: "Data & AI" },
@@ -223,7 +101,7 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id as any)}
-                className={`px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all cursor-pointer ${
                   filter === tab.id
                     ? "bg-white text-black shadow-md"
                     : "text-neutral-400 hover:text-white hover:bg-white/5"
@@ -235,26 +113,77 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
           </div>
         </div>
 
-        {/* Floating Canvas Viewport - 100vw Fullscreen */}
-        <div className="absolute inset-0 pointer-events-auto z-0 w-full h-full">
-          <Canvas
-            camera={{ position: [0, 1, 28], fov: 45 }}
-            gl={{ antialias: true, alpha: true }}
-            className="w-full h-full"
+        {/* 3D Slanted Perspective Grid Viewport Container */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-auto z-10 [perspective:1400px] overflow-hidden pt-28 pb-16">
+          <div
+            ref={gridRef}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 w-full max-w-7xl px-6 [transform-style:preserve-3d] transition-transform duration-300 origin-center"
+            style={{
+              transform: "rotateX(16deg) rotateY(-14deg) rotateZ(3deg)"
+            }}
           >
-            <ambientLight intensity={1.5} />
-            <directionalLight position={[10, 15, 10]} intensity={1.2} />
-            <SceneRig
-              projects={filteredProjects}
-              lang={lang}
-              onSelectProject={onSelectProject}
-            />
-          </Canvas>
+            {filteredProjects.map((project, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
+                viewport={{ once: true }}
+                onClick={() => onSelectProject(project)}
+                className="group relative p-6 rounded-2xl cursor-pointer bg-neutral-950/90 backdrop-blur-xl border border-white/10 shadow-2xl hover:border-white/40 hover:bg-neutral-900/95 transition-all duration-300 transform-gpu hover:-translate-y-3 hover:scale-[1.03] text-left flex flex-col justify-between min-h-[260px]"
+              >
+                <div>
+                  {/* Top Month/Year Badge */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-serif italic text-xs tracking-widest text-neutral-300 font-semibold border-b border-white/20 pb-0.5">
+                      {project.dateBadge}
+                    </span>
+                    <span className="font-mono text-[10px] text-neutral-400 uppercase tracking-widest px-2.5 py-0.5 rounded bg-white/5 border border-white/10">
+                      {project.category}
+                    </span>
+                  </div>
+
+                  {/* Project Title */}
+                  <h3 className="font-display font-extrabold text-lg sm:text-xl text-white tracking-tight uppercase leading-snug mb-3 group-hover:text-purple-300 transition-colors">
+                    {project.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-xs text-neutral-400 font-sans line-clamp-3 leading-relaxed mb-4">
+                    {lang === "id" ? project.descriptionID : project.descriptionEN}
+                  </p>
+                </div>
+
+                <div>
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {project.badges.slice(0, 3).map((badge, bIndex) => (
+                      <span
+                        key={bIndex}
+                        className="text-[10px] font-mono text-neutral-400 bg-neutral-900 border border-white/10 px-2.5 py-0.5 rounded"
+                      >
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Footer Action */}
+                  <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs font-mono text-neutral-300">
+                    <span className="text-white font-medium group-hover:underline inline-flex items-center gap-1">
+                      <span>{lang === "id" ? "Lihat Detail" : "View Case Study"}</span>
+                      <ArrowUpRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </span>
+                    <span className="text-neutral-500 text-[10px] uppercase tracking-wider">↗ Click</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        {/* Scroll Helper Bottom Indicator */}
+        {/* Scroll Helper Indicator */}
         <div className="flex justify-between items-end w-full pointer-events-none z-20">
-          <div className="font-mono text-xs text-neutral-400 flex items-center gap-2 bg-neutral-900/90 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-lg">
+          <div className="font-mono text-xs text-neutral-300 flex items-center gap-2 bg-neutral-900/90 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-xl">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             <span>
               {lang === "id"
