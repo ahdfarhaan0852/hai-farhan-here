@@ -28,7 +28,7 @@ interface Projects3DGridProps {
   onSelectProject: (project: ProjectItem) => void;
 }
 
-// Minimalist 3D Card following Mohit Virli's Awwwards aesthetic
+// Compact 3D Card following Mohit Virli's Awwwards aesthetic
 const Card3D: React.FC<{
   project: ProjectItem;
   targetPosition: [number, number, number];
@@ -41,7 +41,7 @@ const Card3D: React.FC<{
     <group position={targetPosition}>
       <Html
         transform
-        distanceFactor={18}
+        distanceFactor={45}
         zIndexRange={[100, 0]}
         className="pointer-events-auto"
       >
@@ -49,9 +49,9 @@ const Card3D: React.FC<{
           onClick={() => onSelect(project)}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className={`w-[290px] sm:w-[320px] p-5 rounded-xl cursor-pointer transition-all duration-300 transform-gpu select-none text-left backdrop-blur-md border ${
+          className={`w-[260px] sm:w-[290px] p-5 rounded-xl cursor-pointer transition-all duration-300 transform-gpu select-none text-left backdrop-blur-md border ${
             hovered
-              ? "scale-[1.04] -translate-y-2 bg-neutral-900/95 border-white/40 shadow-2xl shadow-black/90 ring-1 ring-white/20"
+              ? "scale-[1.05] -translate-y-2 bg-neutral-900/95 border-white/50 shadow-2xl shadow-black/90 ring-1 ring-white/30"
               : "scale-100 bg-neutral-950/85 border-white/10 shadow-xl shadow-black/70 hover:border-white/20"
           }`}
         >
@@ -66,7 +66,7 @@ const Card3D: React.FC<{
           </div>
 
           {/* Project Title */}
-          <h3 className="font-display font-bold text-base sm:text-lg text-white tracking-tight uppercase leading-snug mb-2 line-clamp-2">
+          <h3 className="font-display font-bold text-base text-white tracking-tight uppercase leading-snug mb-2 line-clamp-2">
             {project.title}
           </h3>
 
@@ -111,9 +111,9 @@ const SceneRig: React.FC<{
   const groupRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
-    // Set initial camera position directly facing first row of project cards
-    camera.position.set(0, 0, 15);
-    camera.lookAt(0, 0, 0);
+    // Initial camera position & overview angle
+    camera.position.set(0, 1, 28);
+    camera.lookAt(0, -3, 0);
 
     const trigger = ScrollTrigger.create({
       trigger: "#projects-3d-wrapper",
@@ -123,11 +123,11 @@ const SceneRig: React.FC<{
       onUpdate: (self) => {
         const progress = self.progress;
 
-        // Smooth camera glide through the project grid as user scrolls
+        // Smooth camera glide down through the project grid as user scrolls
         gsap.to(camera.position, {
-          x: Math.sin(progress * Math.PI * 0.6) * 3,
-          y: -progress * 22,
-          z: 15 - progress * 26,
+          x: Math.sin(progress * Math.PI * 0.5) * 4,
+          y: 1 - progress * 40,
+          z: 28 - progress * 32,
           duration: 0.4,
           ease: "power1.out",
           overwrite: "auto"
@@ -135,9 +135,9 @@ const SceneRig: React.FC<{
 
         if (groupRef.current) {
           gsap.to(groupRef.current.rotation, {
-            x: 0.2 - progress * 0.1,
-            y: -0.28 + progress * 0.15,
-            z: 0.05 - progress * 0.03,
+            x: 0.18 - progress * 0.08,
+            y: -0.22 + progress * 0.12,
+            z: 0.04 - progress * 0.02,
             duration: 0.4,
             ease: "power1.out",
             overwrite: "auto"
@@ -153,19 +153,19 @@ const SceneRig: React.FC<{
 
   // Wide, spacious 3D grid layout across 100vw
   const columns = 3;
-  const spacingX = 10.5;
-  const spacingY = 6.2;
-  const spacingZ = 4.2;
+  const spacingX = 14.5; // Wide horizontal gap to fill screen edge-to-edge comfortably
+  const spacingY = 9.5;  // Generous vertical row gap
+  const spacingZ = 6.0;  // Deep Z depth staggering
 
   return (
-    <group ref={groupRef} rotation={[0.2, -0.28, 0.05]}>
+    <group ref={groupRef} rotation={[0.18, -0.22, 0.04]}>
       {projects.map((project, index) => {
         const col = index % columns;
         const row = Math.floor(index / columns);
 
         const x = (col - (columns - 1) / 2) * spacingX;
         const y = -row * spacingY;
-        const z = -row * spacingZ + col * 1.0;
+        const z = -row * spacingZ + col * 1.2;
 
         return (
           <Card3D
@@ -196,14 +196,14 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
   return (
     <div
       id="projects-3d-wrapper"
-      className="relative w-full h-[320vh] bg-[#08080a] text-white overflow-hidden"
+      className="relative w-full h-[360vh] bg-[#08080a] text-white overflow-hidden"
     >
       {/* Sticky Fullscreen 3D Viewport Header */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none z-10">
         
         {/* Header Title & Filter Buttons */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pointer-events-auto pt-20 sm:pt-6 z-20">
-          <div className="text-left">
+          <div className="text-left bg-neutral-950/80 backdrop-blur-md p-4 rounded-2xl border border-white/10">
             <span className="font-mono text-xs tracking-widest text-neutral-400 uppercase mb-1 block">
               // {lang === "id" ? "Katalog Proyek 3D" : "3D Side Projects Grid"}
             </span>
@@ -238,7 +238,7 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
         {/* Floating Canvas Viewport - 100vw Fullscreen */}
         <div className="absolute inset-0 pointer-events-auto z-0 w-full h-full">
           <Canvas
-            camera={{ position: [0, 0, 15], fov: 45 }}
+            camera={{ position: [0, 1, 28], fov: 45 }}
             gl={{ antialias: true, alpha: true }}
             className="w-full h-full"
           >
