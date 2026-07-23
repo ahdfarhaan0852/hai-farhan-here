@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { About } from "./components/About";
 import { Skills } from "./components/Skills";
-import { History } from "./components/History";
 import { LiquidRevealHero } from "./components/LiquidRevealHero";
 import { ExperienceHub } from "./components/3d/ExperienceHub";
 import { 
   Moon, 
   Sun, 
-  Menu, 
-  X, 
-  MessageSquare, 
   Mail, 
   ExternalLink
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Inline Icons to avoid lucide-react version mismatches
 const LinkedinIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -52,25 +47,12 @@ const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// Helper component for navigation links
-const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode; onClick?: () => void }) => (
-  <a
-    href={href}
-    onClick={onClick}
-    className="text-sm font-display font-bold tracking-widest uppercase text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100 transition-colors"
-  >
-    {children}
-  </a>
-);
-
 function App() {
-  const [theme, setTheme] = useState("light");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState("dark");
   const [lang, setLang] = useState<"id" | "en">("id");
 
-  // Load theme preference on mount using a unique key
   useEffect(() => {
-    const savedTheme = localStorage.getItem("vite-portfolio-theme") || "light";
+    const savedTheme = localStorage.getItem("vite-portfolio-theme") || "dark";
     setTheme(savedTheme);
     if (savedTheme === "dark") {
       document.documentElement.classList.add("dark");
@@ -90,114 +72,50 @@ function App() {
     }
   };
 
-  const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: lang === "id" ? "Tentang" : "About", href: "#about" },
-    { label: lang === "id" ? "Proyek" : "Projects", href: "#projects" },
-    { label: lang === "id" ? "Keahlian" : "Skills", href: "#skills" },
-    { label: lang === "id" ? "Catatan" : "Journal", href: "#journal" },
-    { label: lang === "id" ? "Kontak" : "Contact", href: "#contact" }
-  ];
-
   return (
     <div className="min-h-screen transition-colors duration-500 font-sans bg-brand-bg-light text-neutral-900 dark:bg-brand-bg-dark dark:text-neutral-50 overflow-x-hidden scroll-smooth">
       
-      {/* HEADER NAVBAR */}
-      <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-brand-bg-light/80 dark:bg-brand-bg-dark/80 border-b border-brand-rose-dust/20 dark:border-brand-plum-muted/10 py-4 px-6 sm:px-12 lg:px-24 flex justify-between items-center">
-        {/* Logo */}
-        <a href="#home" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-lg bg-brand-lavender-soft dark:bg-brand-lavender-bright flex items-center justify-center font-display font-bold text-white dark:text-brand-bg-dark text-md shadow-sm transition-transform duration-300 group-hover:rotate-12">
-            AF
-          </div>
-          <span className="font-display font-bold tracking-tight text-lg uppercase hidden sm:inline-block">Ahmad Farhan</span>
-        </a>
+      {/* Floating Theme & Language Quick Toggle Controls (Header Navbar Removed) */}
+      <div className="fixed top-6 right-6 z-50 flex items-center gap-3 bg-neutral-950/80 backdrop-blur-md p-2 rounded-full border border-white/10 shadow-2xl">
+        <button
+          onClick={() => setLang(lang === "id" ? "en" : "id")}
+          aria-label="Toggle Language"
+          className="font-mono text-xs font-bold px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors uppercase text-white cursor-pointer"
+        >
+          <span className={lang === "id" ? "text-purple-400 font-extrabold" : "text-neutral-400"}>ID</span>
+          <span className="text-neutral-500 mx-1">|</span>
+          <span className={lang === "en" ? "text-purple-400 font-extrabold" : "text-neutral-400"}>EN</span>
+        </button>
 
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <NavLink key={link.label} href={link.href}>
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        <button
+          onClick={toggleTheme}
+          aria-label="Toggle Theme"
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white cursor-pointer"
+        >
+          {theme === "light" ? (
+            <Moon className="w-4 h-4 text-purple-300" />
+          ) : (
+            <Sun className="w-4 h-4 text-yellow-300" />
+          )}
+        </button>
+      </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-4">
-          {/* Language Switcher Button (ID | EN) */}
-          <button
-            onClick={() => setLang(lang === "id" ? "en" : "id")}
-            aria-label="Toggle Language"
-            className="font-mono text-xs font-bold px-2.5 py-1.5 rounded-lg border border-brand-rose-dust/40 dark:border-brand-plum-muted/40 bg-brand-rose-soft/20 dark:bg-brand-plum-charcoal/20 hover:bg-brand-rose-soft/40 dark:hover:bg-brand-plum-charcoal/40 transition-colors uppercase cursor-pointer"
-          >
-            <span className={lang === "id" ? "text-brand-lavender-soft dark:text-brand-lavender-bright font-extrabold" : "text-neutral-400 dark:text-neutral-500"}>ID</span>
-            <span className="text-neutral-400 dark:text-neutral-500 font-normal mx-0.5">|</span>
-            <span className={lang === "en" ? "text-brand-lavender-soft dark:text-brand-lavender-bright font-extrabold" : "text-neutral-400 dark:text-neutral-500"}>EN</span>
-          </button>
-
-          {/* Light/Dark Toggle */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle Theme"
-            className="p-2 rounded-full border border-brand-rose-dust/40 dark:border-brand-plum-muted/40 bg-brand-rose-soft/20 dark:bg-brand-plum-charcoal/20 hover:bg-brand-rose-soft/60 dark:hover:bg-brand-plum-charcoal/60 transition-all duration-300 cursor-pointer"
-          >
-            {theme === "light" ? (
-              <Moon className="w-4 h-4 text-brand-lavender-soft" />
-            ) : (
-              <Sun className="w-4 h-4 text-brand-lavender-bright" />
-            )}
-          </button>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-full border border-brand-rose-dust/40 dark:border-brand-plum-muted/40 md:hidden flex items-center justify-center text-neutral-600 dark:text-neutral-300"
-            aria-label="Toggle Menu"
-          >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
-        </div>
-      </header>
-
-      {/* MOBILE NAV PANEL */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-[65px] left-0 w-full z-40 bg-brand-bg-light dark:bg-brand-bg-dark border-b border-brand-rose-dust/30 dark:border-brand-plum-muted/20 px-6 py-8 flex flex-col gap-6 md:hidden shadow-xl"
-          >
-            {navLinks.map((link) => (
-              <NavLink 
-                key={link.label} 
-                href={link.href} 
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* HERO SECTION (#home) - Interactive Liquid Reveal Hero */}
+      {/* 1. HERO SECTION (#home) - Face & Bio Liquid Reveal */}
       <section id="home" className="w-full min-h-screen">
         <LiquidRevealHero lang={lang} />
       </section>
 
-      {/* EXPERIENCE HUB SECTION - Dual Interactive 3D Portals */}
-      <ExperienceHub lang={lang} />
+      {/* 2. EXPERIENCE HUB SECTION - Dual 3D Portals (Left: Work & Education Journey | Right: Projects Carousel) */}
+      <section id="experience" className="w-full">
+        <ExperienceHub lang={lang} />
+      </section>
 
-      {/* PORTFOLIO CONTENT WRAPPER */}
+      {/* 3. SKILLS SECTION & 4. CONTACT SECTION WRAPPER */}
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
-        {/* ABOUT SECTION */}
-        <About lang={lang} />
-
         {/* SKILLS SECTION */}
-        <Skills lang={lang} />
-
-        {/* JOURNAL SECTION (History) */}
-        <History lang={lang} />
+        <section id="skills" className="w-full pt-16">
+          <Skills lang={lang} />
+        </section>
 
         {/* CONTACT SECTION */}
         <motion.section
@@ -229,7 +147,6 @@ function App() {
             {/* Right Column: Contact Details */}
             <div className="lg:col-span-8 space-y-12">
               
-              {/* Form placeholder / Grid layout */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 
                 {/* Social Card 1: WhatsApp */}
@@ -240,51 +157,51 @@ function App() {
                   className="p-6 rounded-2xl border border-brand-rose-dust/30 dark:border-brand-plum-muted/30 bg-brand-rose-soft/10 dark:bg-brand-plum-charcoal/10 hover:bg-brand-rose-soft/30 dark:hover:bg-brand-plum-charcoal/30 flex items-center justify-between group transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/40 rounded-xl text-brand-lavender-soft dark:text-brand-lavender-bright">
-                      <MessageSquare className="w-6 h-6" />
+                    <div className="p-3 rounded-xl bg-brand-lavender-soft/10 dark:bg-brand-lavender-bright/10 text-brand-lavender-soft dark:text-brand-lavender-bright">
+                      <Mail className="w-5 h-5" />
                     </div>
-                    <div className="text-left">
-                      <h4 className="font-mono text-xs text-neutral-400 uppercase">WhatsApp</h4>
-                      <p className="font-display font-bold text-neutral-900 dark:text-neutral-100">+62 853-5156-1344</p>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-neutral-400 block">WhatsApp / Phone</span>
+                      <span className="font-display font-bold text-sm text-neutral-900 dark:text-neutral-100">+62 853-5156-1344</span>
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-brand-lavender-soft dark:group-hover:text-brand-lavender-bright transition-colors" />
                 </a>
 
                 {/* Social Card 2: Email */}
                 <a 
-                  href="mailto:itsmeaan08@gmail.com"
+                  href="mailto:farhanahmad0852@gmail.com" 
                   className="p-6 rounded-2xl border border-brand-rose-dust/30 dark:border-brand-plum-muted/30 bg-brand-rose-soft/10 dark:bg-brand-plum-charcoal/10 hover:bg-brand-rose-soft/30 dark:hover:bg-brand-plum-charcoal/30 flex items-center justify-between group transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/40 rounded-xl text-brand-lavender-soft dark:text-brand-lavender-bright">
-                      <Mail className="w-6 h-6" />
+                    <div className="p-3 rounded-xl bg-brand-lavender-soft/10 dark:bg-brand-lavender-bright/10 text-brand-lavender-soft dark:text-brand-lavender-bright">
+                      <Mail className="w-5 h-5" />
                     </div>
-                    <div className="text-left">
-                      <h4 className="font-mono text-xs text-neutral-400 uppercase">Email</h4>
-                      <p className="font-display font-bold text-neutral-900 dark:text-neutral-100">itsmeaan08@gmail.com</p>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-neutral-400 block">Email Direct</span>
+                      <span className="font-display font-bold text-xs sm:text-sm text-neutral-900 dark:text-neutral-100">farhanahmad0852@gmail.com</span>
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-brand-lavender-soft dark:group-hover:text-brand-lavender-bright transition-colors" />
                 </a>
 
                 {/* Social Card 3: LinkedIn */}
                 <a 
-                  href="https://www.linkedin.com/in/ahmdfaarhaan" 
+                  href="https://linkedin.com/in/ahmdfaarhaan" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-6 rounded-2xl border border-brand-rose-dust/30 dark:border-brand-plum-muted/30 bg-brand-rose-soft/10 dark:bg-brand-plum-charcoal/10 hover:bg-brand-rose-soft/30 dark:hover:bg-brand-plum-charcoal/30 flex items-center justify-between group transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/40 rounded-xl text-brand-lavender-soft dark:text-brand-lavender-bright">
-                      <LinkedinIcon className="w-6 h-6" />
+                    <div className="p-3 rounded-xl bg-brand-lavender-soft/10 dark:bg-brand-lavender-bright/10 text-brand-lavender-soft dark:text-brand-lavender-bright">
+                      <LinkedinIcon className="w-5 h-5" />
                     </div>
-                    <div className="text-left">
-                      <h4 className="font-mono text-xs text-neutral-400 uppercase">LinkedIn</h4>
-                      <p className="font-display font-bold text-neutral-900 dark:text-neutral-100">ahmdfaarhaan</p>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-neutral-400 block">LinkedIn Profile</span>
+                      <span className="font-display font-bold text-sm text-neutral-900 dark:text-neutral-100">ahmdfaarhaan</span>
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-brand-lavender-soft dark:group-hover:text-brand-lavender-bright transition-colors" />
                 </a>
 
                 {/* Social Card 4: Instagram */}
@@ -295,38 +212,27 @@ function App() {
                   className="p-6 rounded-2xl border border-brand-rose-dust/30 dark:border-brand-plum-muted/30 bg-brand-rose-soft/10 dark:bg-brand-plum-charcoal/10 hover:bg-brand-rose-soft/30 dark:hover:bg-brand-plum-charcoal/30 flex items-center justify-between group transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/40 rounded-xl text-brand-lavender-soft dark:text-brand-lavender-bright">
-                      <InstagramIcon className="w-6 h-6" />
+                    <div className="p-3 rounded-xl bg-brand-lavender-soft/10 dark:bg-brand-lavender-bright/10 text-brand-lavender-soft dark:text-brand-lavender-bright">
+                      <InstagramIcon className="w-5 h-5" />
                     </div>
-                    <div className="text-left">
-                      <h4 className="font-mono text-xs text-neutral-400 uppercase">Instagram</h4>
-                      <p className="font-display font-bold text-neutral-900 dark:text-neutral-100">@_ahdfarhan_</p>
+                    <div>
+                      <span className="font-mono text-[10px] uppercase text-neutral-400 block">Instagram</span>
+                      <span className="font-display font-bold text-sm text-neutral-900 dark:text-neutral-100">@_ahdfarhan_</span>
                     </div>
                   </div>
-                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-brand-lavender-soft dark:group-hover:text-brand-lavender-bright transition-colors" />
                 </a>
 
               </div>
-
             </div>
 
           </div>
         </motion.section>
-
       </div>
 
-      {/* MAIN FOOTER */}
-      <footer className="w-full border-t border-brand-rose-dust/20 dark:border-brand-plum-muted/10 bg-brand-bg-light/50 dark:bg-brand-bg-dark/50 py-8 px-6 sm:px-12 lg:px-24 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono text-neutral-500">
-        <div>
-          &copy; 2026 Ahmad Farhan. All Rights Reserved.
-        </div>
-        <div className="flex gap-4">
-          <a href="https://github.com/ahdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors">GitHub</a>
-          <span>/</span>
-          <a href="https://www.linkedin.com/in/ahmdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors">LinkedIn</a>
-          <span>/</span>
-          <a href="https://instagram.com/_ahdfarhan_" target="_blank" rel="noopener noreferrer" className="hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors">Instagram</a>
-        </div>
+      {/* FOOTER */}
+      <footer className="border-t border-brand-rose-dust/20 dark:border-brand-plum-muted/10 py-12 px-6 sm:px-12 lg:px-24 text-center font-mono text-xs text-neutral-400 dark:text-neutral-500">
+        <p>© 2026 Ahmad Farhan. Built with React, Three.js, R3F & Tailwind CSS.</p>
       </footer>
 
     </div>
