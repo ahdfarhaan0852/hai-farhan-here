@@ -187,13 +187,15 @@ function App() {
 
       {/* PORTFOLIO CONTENT WRAPPER */}
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
-        
         {/* ABOUT SECTION */}
         <About lang={lang} />
+      </div>
 
-        {/* PROJECTS SECTION */}
-        <Projects lang={lang} />
+      {/* PROJECTS SECTION - Fullscreen 3D Viewport */}
+      <Projects lang={lang} />
 
+      {/* PORTFOLIO CONTENT WRAPPER CONTINUED */}
+      <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
         {/* SKILLS SECTION */}
         <Skills lang={lang} />
 
