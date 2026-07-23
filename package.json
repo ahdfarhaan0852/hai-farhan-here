@@ -11,14 +11,19 @@
   },
   "dependencies": {
     "@radix-ui/react-hover-card": "^1.1.19",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/three": "^0.185.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.42.2",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.25.0",
     "qss": "^3.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
