@@ -3,15 +3,14 @@ import { About } from "./components/About";
 import { Projects } from "./components/Projects";
 import { Skills } from "./components/Skills";
 import { History } from "./components/History";
+import { LiquidRevealHero } from "./components/LiquidRevealHero";
 import { 
   Moon, 
   Sun, 
   Menu, 
   X, 
-  ArrowDown, 
   MessageSquare, 
   Mail, 
-  MapPin,
   ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -181,103 +180,9 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* HERO SECTION (#home) - Reusable Minimalist Hero Layout */}
-      <section 
-        id="home" 
-        className="relative flex min-h-screen w-full flex-col items-center justify-between pt-24 pb-12 px-6 sm:px-12 lg:px-24"
-      >
-        {/* Helper layout spacing */}
-        <div />
-
-        {/* Main Content Area */}
-        <div className="relative grid w-full max-w-7xl flex-grow grid-cols-1 items-center md:grid-cols-12 gap-8 md:gap-4 my-auto">
-          
-          {/* Left Column: Description (md:col-span-4) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="z-20 order-2 md:order-1 md:col-span-4 text-left flex flex-col items-start gap-6"
-          >
-            <span className="font-mono text-xs tracking-widest text-brand-lavender-soft dark:text-brand-lavender-bright uppercase block">
-              {lang === "id" ? "• perkenalan singkat" : "• personal introduction"}
-            </span>
-            <p className="text-sm sm:text-base leading-relaxed text-neutral-600 dark:text-neutral-300 font-sans text-justify">
-              {lang === "id" 
-                ? "Mahasiswa Teknik Informatika di Universitas Muhammadiyah Riau yang aktif mengelola usaha retail alif-parcel. Memiliki kegemaran berolahraga dengan minat mendalam di cabang Powerlifting, serta memiliki dedikasi kepemimpinan kuat melalui perjalanan panjang di organisasi kepramukaan."
-                : "IT student at Universitas Muhammadiyah Riau who actively manages the alif-parcel retail business. Highly passionate about strength training with a deep focus on Powerlifting, combined with a strong leadership background forged through extensive scouting organizations."}
-            </p>
-            <a 
-              href="#about" 
-              className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono font-bold text-neutral-900 dark:text-white underline decoration-brand-lavender-soft dark:decoration-brand-lavender-bright decoration-2 underline-offset-4 hover:opacity-80 transition-opacity"
-            >
-              <span>{lang === "id" ? "Pelajari Selengkapnya" : "Learn More"}</span>
-              <ArrowDown className="w-3.5 h-3.5" />
-            </a>
-          </motion.div>
-
-          {/* Center Column: Portrait Image with Circle Aksen (md:col-span-4) */}
-          <div className="relative order-1 md:order-2 md:col-span-4 flex justify-center items-center h-[350px] md:h-[450px]">
-            {/* Background circle in lavender color */}
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-              className="absolute z-0 h-[260px] w-[260px] sm:h-[300px] sm:w-[300px] md:h-[350px] md:w-[350px] rounded-full bg-brand-lavender-soft/40 dark:bg-brand-plum-charcoal/50 border border-brand-rose-dust/30 dark:border-brand-plum-muted/20"
-            />
-            {/* User photo: farhan.jpg */}
-            <motion.img
-              src="/images/farhan.jpg"
-              alt="Ahmad Farhan"
-              className="relative z-10 h-[240px] w-[240px] sm:h-[280px] sm:w-[280px] md:h-[320px] md:w-[320px] object-cover rounded-full border-4 border-brand-bg-light dark:border-brand-bg-dark shadow-xl"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = `https://placehold.co/400x400/c5b3d3/ffffff?text=Ahmad+Farhan`;
-              }}
-            />
-          </div>
-
-          {/* Right Column: Name Typography Overlay (md:col-span-4) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="z-20 order-3 md:order-3 md:col-span-4 flex items-center justify-start text-left"
-          >
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tighter leading-[0.9] uppercase">
-              AHMAD
-              <br />
-              <span className="text-brand-lavender-soft dark:text-brand-lavender-bright">FARHAN.</span>
-            </h1>
-          </motion.div>
-        </div>
-
-        {/* Footer Hero */}
-        <footer className="z-30 flex w-full max-w-7xl items-center justify-between border-t border-brand-rose-dust/20 dark:border-brand-plum-muted/10 pt-6 text-xs sm:text-sm font-mono text-neutral-500">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="flex items-center space-x-4"
-          >
-            <a href="https://github.com/ahdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors">GitHub</a>
-            <span>/</span>
-            <a href="https://www.linkedin.com/in/ahmdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-brand-lavender-soft dark:hover:text-brand-lavender-bright transition-colors">LinkedIn</a>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
-            className="flex items-center gap-1.5"
-          >
-            <MapPin className="w-3.5 h-3.5" />
-            <span>Pekanbaru, Riau, ID</span>
-          </motion.div>
-        </footer>
+      {/* HERO SECTION (#home) - Interactive Liquid Reveal Hero */}
+      <section id="home" className="w-full min-h-screen">
+        <LiquidRevealHero lang={lang} />
       </section>
 
       {/* PORTFOLIO CONTENT WRAPPER */}
