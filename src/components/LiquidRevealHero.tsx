@@ -114,32 +114,34 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
     function onPointerDown(e: PointerEvent) {
       onPointerMove(e);
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 6; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 2;
+        const speed = Math.random() * 4 + 1.5;
         addParticle(
           pointerX,
           pointerY,
           Math.cos(angle) * speed,
           Math.sin(angle) * speed,
-          Math.random() * 35 + 45
+          Math.random() * 20 + 25
         );
       }
     }
 
+    // Finer, thinner, soft liquid particles
     function addParticle(x: number, y: number, vx: number, vy: number, customRadius?: number) {
       const speed = Math.hypot(vx, vy);
-      const radius = customRadius || Math.min(Math.max(speed * 3, 35), 110);
+      // Thinner trail radius: 20px to 55px max (down from 140px)
+      const radius = customRadius || Math.min(Math.max(speed * 1.8, 20), 55);
 
       particles.push({
         x,
         y,
-        vx: vx * 0.15 + (Math.random() - 0.5) * 0.4,
-        vy: vy * 0.15 + (Math.random() - 0.5) * 0.4,
+        vx: vx * 0.12 + (Math.random() - 0.5) * 0.3,
+        vy: vy * 0.12 + (Math.random() - 0.5) * 0.3,
         radius,
-        maxRadius: radius * 1.25,
+        maxRadius: radius * 1.15,
         alpha: 1.0,
-        decay: Math.random() * 0.018 + 0.02
+        decay: Math.random() * 0.025 + 0.035 // Soft & quick fade over ~0.5s
       });
     }
 
@@ -172,9 +174,9 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
       if (now - lastPointerTime > 1200) {
         autoAngle += 0.025;
-        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.3);
-        const autoY = height * 0.5 + Math.cos(autoAngle * 0.8) * (height * 0.25);
-        addParticle(autoX, autoY, Math.sin(autoAngle) * 2, Math.cos(autoAngle * 0.8) * 2, 70);
+        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.28);
+        const autoY = height * 0.45 + Math.cos(autoAngle * 0.8) * (height * 0.22);
+        addParticle(autoX, autoY, Math.sin(autoAngle) * 1.5, Math.cos(autoAngle * 0.8) * 1.5, 35);
       }
 
       drawImageCover(topCtx, baseImg);
@@ -190,7 +192,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.radius += (p.maxRadius - p.radius) * 0.06;
+        p.radius += (p.maxRadius - p.radius) * 0.08;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
@@ -200,7 +202,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
         const grad = maskCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
         grad.addColorStop(0, `rgba(0, 0, 0, ${p.alpha})`);
-        grad.addColorStop(0.5, `rgba(0, 0, 0, ${p.alpha * 0.65})`);
+        grad.addColorStop(0.5, `rgba(0, 0, 0, ${p.alpha * 0.6})`);
         grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
         maskCtx.fillStyle = grad;
@@ -223,9 +225,9 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
       if (particles.length > 0) {
         ctx.save();
         ctx.globalCompositeOperation = "screen";
-        ctx.globalAlpha = 0.22;
-        ctx.drawImage(topCanvas, -2, -1);
-        ctx.drawImage(topCanvas, 2, 1);
+        ctx.globalAlpha = 0.2;
+        ctx.drawImage(topCanvas, -1.5, -1);
+        ctx.drawImage(topCanvas, 1.5, 1);
         ctx.restore();
       }
 
@@ -241,18 +243,18 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
   }, []);
 
   return (
-    <div className="w-full min-h-[90vh] flex items-center justify-center pt-24 pb-12 px-6 sm:px-12 lg:px-24">
-      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+    <div className="w-full min-h-[85vh] flex items-center justify-center pt-24 pb-12 px-6 sm:px-12 lg:px-24">
+      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         
-        {/* Left Column: Information & Typography (lg:col-span-7) */}
-        <div className="lg:col-span-7 text-left flex flex-col items-start gap-6">
+        {/* Left Column: Information & Typography (lg:col-span-6) */}
+        <div className="lg:col-span-6 text-left flex flex-col items-start gap-6 z-20">
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/50 border border-brand-rose-dust/30 dark:border-brand-plum-muted/20 font-mono text-xs font-bold tracking-widest text-brand-lavender-soft dark:text-brand-lavender-bright uppercase">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{lang === "id" ? "Perkenalan Singkat" : "Personal Introduction"}</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tighter leading-[0.95] uppercase">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tighter leading-[0.95] uppercase">
             AHMAD <br />
             <span className="text-brand-lavender-soft dark:text-brand-lavender-bright">FARHAN.</span>
           </h1>
@@ -274,34 +276,31 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
             <div className="inline-flex items-center gap-2 px-4 py-3 rounded-full border border-brand-rose-dust/40 dark:border-brand-plum-muted/30 font-mono text-xs text-neutral-500 dark:text-neutral-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{lang === "id" ? "Geser kursor pada foto ✦" : "Hover photo for reveal ✦"}</span>
+              <span>{lang === "id" ? "Usap foto untuk efek liquid ✦" : "Hover photo for fluid reveal ✦"}</span>
             </div>
           </div>
 
         </div>
 
-        {/* Right Column: Interactive Portrait Card Container (lg:col-span-5) */}
-        <div className="lg:col-span-5 flex justify-center items-center w-full">
+        {/* Right Column: Seamless Portrait Section without Box Padding (lg:col-span-6) */}
+        <div className="lg:col-span-6 flex justify-center lg:justify-end items-center w-full">
           <div
             ref={containerRef}
-            className="relative w-full max-w-[420px] aspect-[4/5] rounded-3xl overflow-hidden border-2 border-brand-rose-dust/40 dark:border-brand-plum-muted/30 shadow-2xl shadow-purple-900/10 touch-none select-none group bg-slate-900"
+            className="relative w-full max-w-[460px] h-[480px] sm:h-[540px] md:h-[580px] touch-none select-none overflow-hidden rounded-2xl"
           >
             {/* Reduced Motion Static Fallback */}
             {isReducedMotion && (
               <img
                 src="/images/base.png"
                 alt="Ahmad Farhan Portrait"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-2xl"
               />
             )}
 
             {/* Interactive Canvas */}
             {!isReducedMotion && (
-              <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair" />
+              <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair rounded-2xl" />
             )}
-
-            {/* Subtle Inner Glass Vignette Overlay */}
-            <div className="absolute inset-0 pointer-events-none rounded-3xl ring-1 ring-inset ring-white/10 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
           </div>
         </div>
 
