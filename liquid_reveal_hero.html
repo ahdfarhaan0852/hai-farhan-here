@@ -256,11 +256,11 @@
       const baseImg = new Image();
       const chromeImg = new Image();
 
-      baseImg.src = './public/images/base.jpg';
-      chromeImg.src = './public/images/chrome.jpg';
-
       baseImg.onload = onImgLoad;
       chromeImg.onload = onImgLoad;
+
+      baseImg.src = './public/images/base.png';
+      chromeImg.src = './public/images/chrome.png';
 
       function onImgLoad() {
         imagesLoaded++;
