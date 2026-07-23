@@ -4,6 +4,7 @@ import { Projects } from "./components/Projects";
 import { Skills } from "./components/Skills";
 import { History } from "./components/History";
 import { LiquidRevealHero } from "./components/LiquidRevealHero";
+import { ExperienceHub } from "./components/3d/ExperienceHub";
 import { 
   Moon, 
   Sun, 
@@ -184,6 +185,9 @@ function App() {
       <section id="home" className="w-full min-h-screen">
         <LiquidRevealHero lang={lang} />
       </section>
+
+      {/* EXPERIENCE HUB SECTION - Dual Interactive 3D Portals */}
+      <ExperienceHub lang={lang} />
 
       {/* PORTFOLIO CONTENT WRAPPER */}
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
