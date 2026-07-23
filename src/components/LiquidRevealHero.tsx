@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowDown, Sparkles } from "lucide-react";
 
 interface LiquidRevealHeroProps {
   lang: "id" | "en";
@@ -114,34 +113,32 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
     function onPointerDown(e: PointerEvent) {
       onPointerMove(e);
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 8; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 4 + 1.5;
+        const speed = Math.random() * 5 + 2;
         addParticle(
           pointerX,
           pointerY,
           Math.cos(angle) * speed,
           Math.sin(angle) * speed,
-          Math.random() * 20 + 25
+          Math.random() * 30 + 45
         );
       }
     }
 
-    // Finer, thinner, soft liquid particles
     function addParticle(x: number, y: number, vx: number, vy: number, customRadius?: number) {
       const speed = Math.hypot(vx, vy);
-      // Thinner trail radius: 20px to 55px max (down from 140px)
-      const radius = customRadius || Math.min(Math.max(speed * 1.8, 20), 55);
+      const radius = customRadius || Math.min(Math.max(speed * 2.5, 30), 85);
 
       particles.push({
         x,
         y,
-        vx: vx * 0.12 + (Math.random() - 0.5) * 0.3,
-        vy: vy * 0.12 + (Math.random() - 0.5) * 0.3,
+        vx: vx * 0.15 + (Math.random() - 0.5) * 0.4,
+        vy: vy * 0.15 + (Math.random() - 0.5) * 0.4,
         radius,
-        maxRadius: radius * 1.15,
+        maxRadius: radius * 1.2,
         alpha: 1.0,
-        decay: Math.random() * 0.025 + 0.035 // Soft & quick fade over ~0.5s
+        decay: Math.random() * 0.015 + 0.02
       });
     }
 
@@ -172,11 +169,12 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
       const now = Date.now();
 
+      // Idle Drift Mode around the face area when no interaction
       if (now - lastPointerTime > 1200) {
-        autoAngle += 0.025;
-        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.28);
-        const autoY = height * 0.45 + Math.cos(autoAngle * 0.8) * (height * 0.22);
-        addParticle(autoX, autoY, Math.sin(autoAngle) * 1.5, Math.cos(autoAngle * 0.8) * 1.5, 35);
+        autoAngle += 0.02;
+        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.12);
+        const autoY = height * 0.42 + Math.cos(autoAngle * 0.8) * (height * 0.1);
+        addParticle(autoX, autoY, Math.sin(autoAngle) * 1.5, Math.cos(autoAngle * 0.8) * 1.5, 55);
       }
 
       drawImageCover(topCtx, baseImg);
@@ -192,7 +190,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.radius += (p.maxRadius - p.radius) * 0.08;
+        p.radius += (p.maxRadius - p.radius) * 0.06;
         p.alpha -= p.decay;
 
         if (p.alpha <= 0) {
@@ -202,7 +200,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
         const grad = maskCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
         grad.addColorStop(0, `rgba(0, 0, 0, ${p.alpha})`);
-        grad.addColorStop(0.5, `rgba(0, 0, 0, ${p.alpha * 0.6})`);
+        grad.addColorStop(0.5, `rgba(0, 0, 0, ${p.alpha * 0.65})`);
         grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
         maskCtx.fillStyle = grad;
@@ -213,21 +211,27 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
       maskCtx.globalCompositeOperation = "source-over";
 
-      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, width, height);
+
+      // Step A: Draw Bottom (Revealed/Chrome) Layer
       ctx.drawImage(bottomCanvas, 0, 0);
 
+      // Step B: Mask Top (Base) Layer
       topCtx.globalCompositeOperation = "destination-in";
       topCtx.drawImage(maskCanvas, 0, 0);
       topCtx.globalCompositeOperation = "source-over";
 
+      // Step C: Draw Masked Top Layer onto Main Canvas
       ctx.drawImage(topCanvas, 0, 0);
 
+      // Step D: Subtle Chromatic Fringe Offset at Reveal Edge
       if (particles.length > 0) {
         ctx.save();
         ctx.globalCompositeOperation = "screen";
-        ctx.globalAlpha = 0.2;
-        ctx.drawImage(topCanvas, -1.5, -1);
-        ctx.drawImage(topCanvas, 1.5, 1);
+        ctx.globalAlpha = 0.22;
+        ctx.drawImage(topCanvas, -2, -1);
+        ctx.drawImage(topCanvas, 2, 1);
         ctx.restore();
       }
 
@@ -243,64 +247,49 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
   }, []);
 
   return (
-    <div className="w-full min-h-[85vh] flex items-center justify-center pt-24 pb-12 px-6 sm:px-12 lg:px-24">
-      <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[100svh] overflow-hidden touch-none select-none bg-black text-white"
+    >
+      {/* Reduced Motion Static Fallback */}
+      {isReducedMotion && (
+        <img
+          src="/images/base.png"
+          alt="Ahmad Farhan"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        />
+      )}
+
+      {/* Interactive Liquid Canvas */}
+      {!isReducedMotion && (
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-10 cursor-crosshair" />
+      )}
+
+      {/* Editorial Overlay Typography - Cindy Zhu Style */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-8 sm:p-12 lg:p-16">
         
-        {/* Left Column: Information & Typography (lg:col-span-6) */}
-        <div className="lg:col-span-6 text-left flex flex-col items-start gap-6 z-20">
-          
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-rose-soft/40 dark:bg-brand-plum-charcoal/50 border border-brand-rose-dust/30 dark:border-brand-plum-muted/20 font-mono text-xs font-bold tracking-widest text-brand-lavender-soft dark:text-brand-lavender-bright uppercase">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{lang === "id" ? "Perkenalan Singkat" : "Personal Introduction"}</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold text-neutral-900 dark:text-neutral-50 tracking-tighter leading-[0.95] uppercase">
-            AHMAD <br />
-            <span className="text-brand-lavender-soft dark:text-brand-lavender-bright">FARHAN.</span>
+        {/* Top Left Title Logo */}
+        <div className="text-left pt-16 sm:pt-4">
+          <h1 className="font-display font-bold text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-none">
+            Ahmad Farhan<span className="text-purple-400">.</span>
           </h1>
-
-          <p className="text-base sm:text-lg leading-relaxed text-neutral-600 dark:text-neutral-300 font-sans max-w-xl text-justify">
-            {lang === "id"
-              ? "Mahasiswa Teknik Informatika di Universitas Muhammadiyah Riau yang aktif mengelola usaha retail alif-parcel. Memiliki kegemaran berolahraga dengan minat mendalam di cabang Powerlifting, serta memiliki dedikasi kepemimpinan kuat melalui perjalanan panjang di organisasi kepramukaan."
-              : "IT student at Universitas Muhammadiyah Riau who actively manages the alif-parcel retail business. Highly passionate about strength training with a deep focus on Powerlifting, combined with a strong leadership background forged through extensive scouting organizations."}
-          </p>
-
-          <div className="flex flex-wrap gap-4 items-center pt-2">
-            <a
-              href="#about"
-              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 font-mono font-bold text-xs sm:text-sm tracking-wider uppercase hover:opacity-90 transition-opacity shadow-lg"
-            >
-              <span>{lang === "id" ? "Pelajari Selengkapnya" : "Learn More"}</span>
-              <ArrowDown className="w-4 h-4" />
-            </a>
-
-            <div className="inline-flex items-center gap-2 px-4 py-3 rounded-full border border-brand-rose-dust/40 dark:border-brand-plum-muted/30 font-mono text-xs text-neutral-500 dark:text-neutral-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{lang === "id" ? "Usap foto untuk efek liquid ✦" : "Hover photo for fluid reveal ✦"}</span>
-            </div>
-          </div>
-
         </div>
 
-        {/* Right Column: Seamless Portrait Section without Box Padding (lg:col-span-6) */}
-        <div className="lg:col-span-6 flex justify-center lg:justify-end items-center w-full">
-          <div
-            ref={containerRef}
-            className="relative w-full max-w-[460px] h-[480px] sm:h-[540px] md:h-[580px] touch-none select-none overflow-hidden rounded-2xl"
-          >
-            {/* Reduced Motion Static Fallback */}
-            {isReducedMotion && (
-              <img
-                src="/images/base.png"
-                alt="Ahmad Farhan Portrait"
-                className="w-full h-full object-cover rounded-2xl"
-              />
-            )}
+        {/* Bottom Bar Content */}
+        <div className="flex flex-col sm:flex-row justify-between items-end gap-6 w-full">
+          {/* Bottom Left Tagline & Bio */}
+          <div className="max-w-md text-left">
+            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed tracking-wide">
+              {lang === "id"
+                ? "Mahasiswa Teknik Informatika UMRI & Peneliti AI / NLP. Eksplorasi batas antara intuisi manusia, kecerdasan buatan, dan sistem produktivitas."
+                : "IT Student at UMRI & AI / NLP Researcher. Exploring the boundary between human intuition, engineered intelligence, and productivity systems."}
+            </p>
+          </div>
 
-            {/* Interactive Canvas */}
-            {!isReducedMotion && (
-              <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair rounded-2xl" />
-            )}
+          {/* Bottom Right Indicator */}
+          <div className="font-mono text-xs text-neutral-400 tracking-widest uppercase flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+            <span>(Usap Layar / Scroll)</span>
           </div>
         </div>
 
