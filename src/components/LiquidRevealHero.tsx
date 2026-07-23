@@ -262,7 +262,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[100svh] overflow-hidden touch-none select-none bg-black text-white"
+      className="relative w-full h-[100svh] overflow-hidden touch-pan-y select-none bg-black text-white"
     >
       {/* Reduced Motion Static Fallback */}
       {isReducedMotion && (

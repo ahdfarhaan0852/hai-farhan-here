@@ -23,31 +23,34 @@ export const ExperienceHub: React.FC<ExperienceHubProps> = () => {
   }, [activePortalId, setActivePortal]);
 
   return (
-    <div id="experience" className="w-full h-screen relative bg-[#08080a]">
-      {/* 3D R3F Viewport Scene matching Mohit Virli's exact repo architecture */}
-      <CanvasLoader>
-        <ScrollWrapper>
-          <ExperienceScene />
-        </ScrollWrapper>
-      </CanvasLoader>
+    <div id="experience" className="relative w-full h-[300vh] bg-[#08080a]">
+      {/* Sticky Viewport Container - Pins 3D scene for full scroll trajectory */}
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+        {/* 3D R3F Viewport Scene matching Mohit Virli's exact repo architecture */}
+        <CanvasLoader>
+          <ScrollWrapper>
+            <ExperienceScene />
+          </ScrollWrapper>
+        </CanvasLoader>
 
-      {/* Floating Instructions & Social Footer Overlay */}
-      <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono text-neutral-400 pointer-events-none z-20">
-        <div className="flex items-center gap-2 bg-neutral-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-xl pointer-events-auto">
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-          <span>
-            {activePortalId
-              ? "Tekan tombol ESC atau klik tombol X untuk keluar portal 3D"
-              : "Klik portal WORK AND EDUCATION atau SIDE PROJECTS untuk masuk ke dunia 3D ✦"}
-          </span>
-        </div>
+        {/* Floating Instructions & Social Footer Overlay */}
+        <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-mono text-neutral-400 pointer-events-none z-20">
+          <div className="flex items-center gap-2 bg-neutral-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-xl pointer-events-auto">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            <span>
+              {activePortalId
+                ? "Tekan tombol ESC atau klik tombol X untuk keluar portal 3D"
+                : "Klik portal WORK AND EDUCATION atau SIDE PROJECTS untuk masuk ke dunia 3D ✦"}
+            </span>
+          </div>
 
-        <div className="flex gap-6 uppercase tracking-widest text-[11px] pointer-events-auto bg-neutral-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-          <a href="https://linkedin.com/in/ahmdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LINKEDIN</a>
-          <span>•</span>
-          <a href="https://github.com/ahdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GITHUB</a>
-          <span>•</span>
-          <a href="https://instagram.com/_ahdfarhan_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
+          <div className="flex gap-6 uppercase tracking-widest text-[11px] pointer-events-auto bg-neutral-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <a href="https://linkedin.com/in/ahmdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">LINKEDIN</a>
+            <span>•</span>
+            <a href="https://github.com/ahdfaarhaan" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GITHUB</a>
+            <span>•</span>
+            <a href="https://instagram.com/_ahdfarhan_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">INSTAGRAM</a>
+          </div>
         </div>
       </div>
     </div>
