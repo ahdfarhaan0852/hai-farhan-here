@@ -32,37 +32,24 @@ interface Projects3DGridProps {
 const Card3D: React.FC<{
   project: ProjectItem;
   targetPosition: [number, number, number];
-  index: number;
-  progress: number;
   lang: "id" | "en";
   onSelect: (project: ProjectItem) => void;
-}> = ({ project, targetPosition, index, progress, lang, onSelect }) => {
+}> = ({ project, targetPosition, lang, onSelect }) => {
   const [hovered, setHovered] = useState(false);
 
-  // Staggered entrance animation calculated from scroll progress & card index
-  const staggerDelay = index * 0.035;
-  const cardProgress = Math.max(0, Math.min(1, (progress - staggerDelay) * 3.5));
-
-  const opacity = cardProgress;
-  const currentZ = targetPosition[2] - (1 - cardProgress) * 5;
-
   return (
-    <group position={[targetPosition[0], targetPosition[1], currentZ]}>
+    <group position={targetPosition}>
       <Html
         transform
-        distanceFactor={22}
+        distanceFactor={18}
         zIndexRange={[100, 0]}
         className="pointer-events-auto"
-        style={{
-          opacity: opacity,
-          transition: "opacity 0.4s ease-out, transform 0.3s ease-out"
-        }}
       >
         <div
           onClick={() => onSelect(project)}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className={`w-[280px] sm:w-[310px] p-5 rounded-xl cursor-pointer transition-all duration-300 transform-gpu select-none text-left backdrop-blur-md border ${
+          className={`w-[290px] sm:w-[320px] p-5 rounded-xl cursor-pointer transition-all duration-300 transform-gpu select-none text-left backdrop-blur-md border ${
             hovered
               ? "scale-[1.04] -translate-y-2 bg-neutral-900/95 border-white/40 shadow-2xl shadow-black/90 ring-1 ring-white/20"
               : "scale-100 bg-neutral-950/85 border-white/10 shadow-xl shadow-black/70 hover:border-white/20"
@@ -122,11 +109,10 @@ const SceneRig: React.FC<{
 }> = ({ projects, lang, onSelectProject }) => {
   const { camera } = useThree();
   const groupRef = useRef<THREE.Group>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    // Initial camera position & slant angle
-    camera.position.set(0, 2, 16);
+    // Set initial camera position directly facing first row of project cards
+    camera.position.set(0, 0, 15);
     camera.lookAt(0, 0, 0);
 
     const trigger = ScrollTrigger.create({
@@ -136,24 +122,22 @@ const SceneRig: React.FC<{
       scrub: 1.2,
       onUpdate: (self) => {
         const progress = self.progress;
-        setScrollProgress(progress);
 
-        // Smooth camera glide along 3D grid
+        // Smooth camera glide through the project grid as user scrolls
         gsap.to(camera.position, {
           x: Math.sin(progress * Math.PI * 0.6) * 3,
-          y: 2 - progress * 20,
-          z: 16 - progress * 28,
+          y: -progress * 22,
+          z: 15 - progress * 26,
           duration: 0.4,
           ease: "power1.out",
           overwrite: "auto"
         });
 
         if (groupRef.current) {
-          // Subtle slanted perspective rotation
           gsap.to(groupRef.current.rotation, {
-            x: 0.22 - progress * 0.12,
-            y: -0.3 + progress * 0.18,
-            z: 0.06 - progress * 0.03,
+            x: 0.2 - progress * 0.1,
+            y: -0.28 + progress * 0.15,
+            z: 0.05 - progress * 0.03,
             duration: 0.4,
             ease: "power1.out",
             overwrite: "auto"
@@ -167,29 +151,27 @@ const SceneRig: React.FC<{
     };
   }, [camera]);
 
-  // Wide 100vw 3D grid positioning across full screen width
+  // Wide, spacious 3D grid layout across 100vw
   const columns = 3;
-  const spacingX = 11.5; // Wide horizontal gap to fill screen edge-to-edge
-  const spacingY = 7.2;  // Generous vertical row gap
-  const spacingZ = 5.2;  // Deep Z depth staggering
+  const spacingX = 10.5;
+  const spacingY = 6.2;
+  const spacingZ = 4.2;
 
   return (
-    <group ref={groupRef} rotation={[0.22, -0.3, 0.06]}>
+    <group ref={groupRef} rotation={[0.2, -0.28, 0.05]}>
       {projects.map((project, index) => {
         const col = index % columns;
         const row = Math.floor(index / columns);
 
         const x = (col - (columns - 1) / 2) * spacingX;
         const y = -row * spacingY;
-        const z = -row * spacingZ + col * 1.2;
+        const z = -row * spacingZ + col * 1.0;
 
         return (
           <Card3D
             key={index}
             project={project}
             targetPosition={[x, y, z]}
-            index={index}
-            progress={scrollProgress}
             lang={lang}
             onSelect={onSelectProject}
           />
@@ -256,7 +238,7 @@ export const Projects3DGrid: React.FC<Projects3DGridProps> = ({
         {/* Floating Canvas Viewport - 100vw Fullscreen */}
         <div className="absolute inset-0 pointer-events-auto z-0 w-full h-full">
           <Canvas
-            camera={{ position: [0, 2, 16], fov: 45 }}
+            camera={{ position: [0, 0, 15], fov: 45 }}
             gl={{ antialias: true, alpha: true }}
             className="w-full h-full"
           >
