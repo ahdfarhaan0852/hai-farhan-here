@@ -142,8 +142,13 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
       });
     }
 
-    // Cover scaling mapping 1920x1080 landscape resolution images smoothly to canvas
-    function drawImageCover(targetCtx: CanvasRenderingContext2D, img: HTMLImageElement) {
+    // Cover scaling with sub-pixel alignment offset correction between base and chrome images
+    function drawImageCover(
+      targetCtx: CanvasRenderingContext2D,
+      img: HTMLImageElement,
+      pixelShiftX: number = 0,
+      pixelShiftY: number = 0
+    ) {
       if (!img.complete || img.naturalWidth === 0) return;
       const imgRatio = img.naturalWidth / img.naturalHeight;
       const screenRatio = width / height;
@@ -161,8 +166,13 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         offsetY = 0;
       }
 
+      // Calculate alignment shift scaled to current viewport width
+      const scale = drawWidth / img.naturalWidth;
+      const finalX = offsetX + pixelShiftX * scale;
+      const finalY = offsetY + pixelShiftY * scale;
+
       targetCtx.clearRect(0, 0, width, height);
-      targetCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      targetCtx.drawImage(img, finalX, finalY, drawWidth, drawHeight);
     }
 
     function renderLoop() {
@@ -178,8 +188,10 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         addParticle(autoX, autoY, Math.sin(autoAngle) * 1.5, Math.cos(autoAngle * 0.8) * 1.5, 45);
       }
 
-      drawImageCover(topCtx, baseImg);
-      drawImageCover(bottomCtx, chromeImg);
+      // Base Image (drawn with 0 offset)
+      drawImageCover(topCtx, baseImg, 0, 0);
+      // Chrome Image (drawn with alignment offset shift: dx=-3px, dy=17px for 100% seamless feature matching)
+      drawImageCover(bottomCtx, chromeImg, -3, 17);
 
       maskCtx.clearRect(0, 0, width, height);
       maskCtx.fillStyle = "rgba(0, 0, 0, 1)";
