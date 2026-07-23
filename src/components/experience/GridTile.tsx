@@ -113,7 +113,7 @@ export const GridTile: React.FC<GridTileProps> = ({
     fontSize: 0.7,
     color: "white",
     textAlign: textAlign,
-    fillOpacity: 0,
+    fillOpacity: 1,
   };
 
   const onPointerOver = () => {

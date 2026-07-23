@@ -9,17 +9,20 @@ export const ScrollWrapper: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     if (!isActive) {
-      camera.position.set(0, -38, 14);
-      camera.rotation.set(0, 0, 0);
+      camera.position.set(0, -37, 12);
+      camera.rotation.set(-Math.PI / 2, 0, 0);
     }
   }, [isActive, camera]);
 
   useFrame((state, delta) => {
     if (!isActive) {
-      camera.position.y = THREE.MathUtils.damp(camera.position.y, -37.5, 5, delta);
-      camera.position.z = THREE.MathUtils.damp(camera.position.z, 14, 5, delta);
+      camera.position.x = THREE.MathUtils.damp(camera.position.x, 0, 5, delta);
+      camera.position.y = THREE.MathUtils.damp(camera.position.y, -37, 5, delta);
+      camera.position.z = THREE.MathUtils.damp(camera.position.z, 12, 5, delta);
+
+      camera.rotation.x = THREE.MathUtils.damp(camera.rotation.x, -Math.PI / 2, 5, delta);
       camera.rotation.y = THREE.MathUtils.lerp(camera.rotation.y, -(state.pointer.x * Math.PI) / 90, 0.05);
-      camera.rotation.x = THREE.MathUtils.lerp(camera.rotation.x, (state.pointer.y * Math.PI) / 120, 0.05);
+      camera.rotation.z = THREE.MathUtils.damp(camera.rotation.z, 0, 5, delta);
     }
   });
 
