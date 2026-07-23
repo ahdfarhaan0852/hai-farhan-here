@@ -142,22 +142,24 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
       });
     }
 
-    // Scale & center portrait so full head, hair, face, and shoulders fit 100% inside screen
-    function drawImageContain(targetCtx: CanvasRenderingContext2D, img: HTMLImageElement) {
+    // Cover scaling mapping 1920x1080 landscape resolution images smoothly to canvas
+    function drawImageCover(targetCtx: CanvasRenderingContext2D, img: HTMLImageElement) {
       if (!img.complete || img.naturalWidth === 0) return;
       const imgRatio = img.naturalWidth / img.naturalHeight;
-      
-      const maxAllowedHeight = height * (width < 640 ? 0.78 : 0.86);
-      let drawHeight = maxAllowedHeight;
-      let drawWidth = drawHeight * imgRatio;
+      const screenRatio = width / height;
+      let drawWidth: number, drawHeight: number, offsetX: number, offsetY: number;
 
-      if (drawWidth > width * 0.92) {
-        drawWidth = width * 0.92;
-        drawHeight = drawWidth / imgRatio;
+      if (screenRatio > imgRatio) {
+        drawWidth = width;
+        drawHeight = width / imgRatio;
+        offsetX = 0;
+        offsetY = (height - drawHeight) / 2;
+      } else {
+        drawWidth = height * imgRatio;
+        drawHeight = height;
+        offsetX = (width - drawWidth) / 2;
+        offsetY = 0;
       }
-
-      const offsetX = (width - drawWidth) / 2;
-      const offsetY = (height - drawHeight) / 2 + (width < 640 ? 25 : 15);
 
       targetCtx.clearRect(0, 0, width, height);
       targetCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
@@ -168,16 +170,16 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
       const now = Date.now();
 
-      // Idle Drift Mode around the face area when no interaction
+      // Idle Drift Mode around center face area when no interaction
       if (now - lastPointerTime > 1200) {
         autoAngle += 0.02;
-        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.1);
-        const autoY = height * 0.42 + Math.cos(autoAngle * 0.8) * (height * 0.08);
+        const autoX = width * 0.5 + Math.sin(autoAngle) * (width * 0.12);
+        const autoY = height * 0.45 + Math.cos(autoAngle * 0.8) * (height * 0.1);
         addParticle(autoX, autoY, Math.sin(autoAngle) * 1.5, Math.cos(autoAngle * 0.8) * 1.5, 45);
       }
 
-      drawImageContain(topCtx, baseImg);
-      drawImageContain(bottomCtx, chromeImg);
+      drawImageCover(topCtx, baseImg);
+      drawImageCover(bottomCtx, chromeImg);
 
       maskCtx.clearRect(0, 0, width, height);
       maskCtx.fillStyle = "rgba(0, 0, 0, 1)";
@@ -255,7 +257,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         <img
           src="/images/base.png"
           alt="Ahmad Farhan"
-          className="absolute inset-0 w-full h-full object-contain z-0"
+          className="absolute inset-0 w-full h-full object-cover z-0"
         />
       )}
 
@@ -264,34 +266,22 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block z-10 cursor-crosshair" />
       )}
 
-      {/* Editorial Overlay Typography - Cindy Zhu Reference Style */}
-      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-8 sm:p-12 lg:p-16">
-        
-        {/* Top Left Title Logo */}
-        <div className="text-left pt-16 sm:pt-4">
-          <h1 className="font-display font-bold text-4xl sm:text-6xl lg:text-7xl text-white tracking-tight uppercase leading-none">
-            Ahmad Farhan<span className="text-purple-400">.</span>
-          </h1>
-        </div>
-
-        {/* Bottom Bar Content */}
+      {/* Subtle Bottom Bar Overlay Info */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-end p-8 sm:p-12 lg:p-16">
         <div className="flex flex-col sm:flex-row justify-between items-end gap-6 w-full">
-          {/* Bottom Left Tagline & Bio */}
           <div className="max-w-md text-left">
-            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed tracking-wide">
+            <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed tracking-wide drop-shadow-md">
               {lang === "id"
                 ? "Mahasiswa Teknik Informatika UMRI & Peneliti AI / NLP. Eksplorasi batas antara intuisi manusia, kecerdasan buatan, dan sistem produktivitas."
                 : "IT Student at UMRI & AI / NLP Researcher. Exploring the boundary between human intuition, engineered intelligence, and productivity systems."}
             </p>
           </div>
 
-          {/* Bottom Right Indicator */}
-          <div className="font-mono text-xs text-neutral-400 tracking-widest uppercase flex items-center gap-2">
+          <div className="font-mono text-xs text-neutral-400 tracking-widest uppercase flex items-center gap-2 drop-shadow-md">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
             <span>(Usap Layar / Scroll)</span>
           </div>
         </div>
-
       </div>
     </div>
   );
