@@ -4,13 +4,13 @@ import { AdaptiveDpr, Preload } from "@react-three/drei";
 
 export const CanvasLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const canvasStyle: React.CSSProperties = {
-    position: "fixed",
+    position: "absolute",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    width: "100vw",
-    height: "100vh",
+    width: "100%",
+    height: "100%",
     pointerEvents: "auto",
     zIndex: 0,
   };
@@ -24,7 +24,7 @@ export const CanvasLoader: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <div className="w-full relative bg-[#08080a]" style={noiseOverlayStyle}>
+    <div className="w-full h-full relative overflow-hidden bg-[#08080a]" style={noiseOverlayStyle}>
       <Canvas
         className="base-canvas"
         shadows
