@@ -36,24 +36,34 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
     // Load Image Layers
     let imagesLoaded = 0;
+    let animId: number;
+    let isInitialized = false;
+
     const baseImg = new Image();
     const chromeImg = new Image();
 
-    baseImg.src = "/images/base.jpg";
-    chromeImg.src = "/images/chrome.jpg";
-
-    baseImg.onload = onImgLoad;
-    chromeImg.onload = onImgLoad;
-
     function onImgLoad() {
       imagesLoaded++;
-      if (imagesLoaded === 2) {
+      if (imagesLoaded >= 2 && !isInitialized) {
+        isInitialized = true;
         initCanvas();
         animId = requestAnimationFrame(renderLoop);
       }
     }
 
-    let animId: number;
+    baseImg.onload = onImgLoad;
+    chromeImg.onload = onImgLoad;
+
+    baseImg.onerror = () => console.error("Failed to load /images/base.jpg");
+    chromeImg.onerror = () => console.error("Failed to load /images/chrome.jpg");
+
+    baseImg.src = "/images/base.jpg";
+    chromeImg.src = "/images/chrome.jpg";
+
+    // Handle instant cache loads
+    if (baseImg.complete && baseImg.naturalWidth !== 0) onImgLoad();
+    if (chromeImg.complete && chromeImg.naturalWidth !== 0) onImgLoad();
+
     let width = 0;
     let height = 0;
 
@@ -174,16 +184,16 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
         addParticle(autoX, autoY, Math.sin(autoAngle) * 2, Math.cos(autoAngle * 0.7) * 2, 85);
       }
 
-      // Draw Top & Bottom Images
+      // Draw Top & Bottom Images to offscreen buffers
       drawImageCover(topCtx, baseImg);
       drawImageCover(bottomCtx, chromeImg);
 
-      // Clear Mask Canvas
+      // Clear Mask Canvas to solid white (fully opaque mask)
       maskCtx.clearRect(0, 0, width, height);
       maskCtx.fillStyle = "rgba(0, 0, 0, 1)";
       maskCtx.fillRect(0, 0, width, height);
 
-      // Render Fluid Particles onto Mask Canvas
+      // Erase mask where particles are located (reveal bottom layer)
       maskCtx.globalCompositeOperation = "destination-out";
 
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -211,8 +221,9 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
 
       maskCtx.globalCompositeOperation = "source-over";
 
-      // Composite Rendering with Chromatic Fringe Edge Effect
-      ctx.clearRect(0, 0, width, height);
+      // Composite Rendering on Main Canvas
+      ctx.fillStyle = "#030712";
+      ctx.fillRect(0, 0, width, height);
 
       // Step A: Draw Bottom (Revealed/Chrome) Layer
       ctx.drawImage(bottomCanvas, 0, 0);
@@ -270,7 +281,7 @@ export const LiquidRevealHero: React.FC<LiquidRevealHeroProps> = ({ lang }) => {
       )}
 
       {/* Overlay UI & Typography */}
-      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-radial from-transparent via-slate-950/50 to-slate-950/85">
+      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-radial from-transparent via-slate-950/40 to-slate-950/85">
         <div className="flex justify-between items-center w-full">
           <div className="font-display font-black text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-purple-400 uppercase">
             FARHAN
