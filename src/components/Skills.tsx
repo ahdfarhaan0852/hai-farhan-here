@@ -1,6 +1,8 @@
 import React from "react";
 import { Languages, ShieldCheck, Layers } from "lucide-react";
 
+import { motion } from "framer-motion";
+
 interface SkillTech {
   name: string;
   logoPath: string;
@@ -69,7 +71,14 @@ export const Skills: React.FC<SkillsProps> = ({ lang }) => {
   ];
 
   return (
-    <section id="skills" className="py-20 border-t border-brand-rose-dust/30 dark:border-brand-plum-muted/20">
+    <motion.section
+      id="skills"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="py-24"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
         
         {/* Left Column: Title */}
@@ -172,6 +181,6 @@ export const Skills: React.FC<SkillsProps> = ({ lang }) => {
         </div>
 
       </div>
-    </section>
+    </motion.section>
   );
 };

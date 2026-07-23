@@ -1,5 +1,6 @@
 import React from "react";
 import { GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface AboutProps {
   lang: "id" | "en";
@@ -7,11 +8,18 @@ interface AboutProps {
 
 export const About: React.FC<AboutProps> = ({ lang }) => {
   return (
-    <section id="about" className="py-20 border-t border-brand-rose-dust/30 dark:border-brand-plum-muted/20">
+    <motion.section
+      id="about"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="py-24"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
         
         {/* Left Column: Heading */}
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4 lg:sticky lg:top-24">
           <span className="font-mono text-xs tracking-widest text-brand-lavender-soft dark:text-brand-lavender-bright uppercase mb-4 block">
             {lang === "id" ? "// profil / latar belakang" : "// profile / background"}
           </span>
@@ -59,40 +67,42 @@ export const About: React.FC<AboutProps> = ({ lang }) => {
                 <div className="absolute w-2 h-2 rounded-full bg-brand-lavender-soft dark:bg-brand-lavender-bright -left-[29px] sm:-left-[37px] top-2 border border-brand-bg-light dark:border-brand-bg-dark" />
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                   <div>
-                    <h4 className="font-display font-bold text-neutral-900 dark:text-neutral-50">Universitas Muhammadiyah Riau (UMRI)</h4>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      {lang === "id" ? "Sarjana Teknik Informatika" : "Bachelor of Informatics Engineering"}
+                    <h4 className="font-display font-bold text-base text-neutral-900 dark:text-neutral-100">
+                      Universitas Muhammadiyah Riau (UMRI)
+                    </h4>
+                    <p className="text-sm font-sans text-neutral-600 dark:text-neutral-400">
+                      S1 Teknik Informatika
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">2023 – 2027</span>
+                  <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                    2022 - Sekarang
+                  </span>
                 </div>
-                <p className="text-xs text-neutral-500 mt-2 font-mono">
-                  {lang === "id"
-                    ? "Mata Kuliah Relevan: Basis Data, Pemrograman Web, Struktur Data, Pembelajaran Mesin."
-                    : "Relevant Courses: Databases, Web Programming, Data Structures, Machine Learning."}
-                </p>
               </div>
 
               {/* Education 2 */}
               <div className="relative">
-                <div className="absolute w-2 h-2 rounded-full bg-neutral-300 dark:bg-neutral-700 -left-[29px] sm:-left-[37px] top-2 border border-brand-bg-light dark:border-brand-bg-dark" />
+                <div className="absolute w-2 h-2 rounded-full bg-neutral-400 dark:bg-neutral-600 -left-[29px] sm:-left-[37px] top-2 border border-brand-bg-light dark:border-brand-bg-dark" />
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                   <div>
-                    <h4 className="font-display font-bold text-neutral-900 dark:text-neutral-50">Pondok Modern Darussalam Gontor</h4>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                      {lang === "id" ? "Pendidikan Formal & Pengajaran Guru" : "Formal Education & Teacher Training"}
+                    <h4 className="font-display font-bold text-base text-neutral-900 dark:text-neutral-100">
+                      KMI Pondok Modern Darussalam Gontor
+                    </h4>
+                    <p className="text-sm font-sans text-neutral-600 dark:text-neutral-400">
+                      Pendidikan Menengah Keagamaan & Kepemimpinan
                     </p>
                   </div>
-                  <span className="font-mono text-xs text-neutral-500 dark:text-neutral-400">2015 – 2023</span>
+                  <span className="font-mono text-xs text-neutral-400 dark:text-neutral-500">
+                    Alumni 2021
+                  </span>
                 </div>
               </div>
 
             </div>
           </div>
-
         </div>
 
       </div>
-    </section>
+    </motion.section>
   );
 };

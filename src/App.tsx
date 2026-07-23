@@ -203,7 +203,14 @@ function App() {
         <History lang={lang} />
 
         {/* CONTACT SECTION */}
-        <section id="contact" className="py-20 border-t border-brand-rose-dust/30 dark:border-brand-plum-muted/20">
+        <motion.section
+          id="contact"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="py-24"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
             
             {/* Left Column: Heading */}
@@ -307,7 +314,7 @@ function App() {
             </div>
 
           </div>
-        </section>
+        </motion.section>
 
       </div>
 

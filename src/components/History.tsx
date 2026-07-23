@@ -1,6 +1,7 @@
 import React from "react";
 import { LinkPreview } from "./ui/link-preview";
 import { Award, Briefcase, Footprints, Trees } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface HistoryProps {
   lang: "id" | "en";
@@ -8,7 +9,14 @@ interface HistoryProps {
 
 export const History: React.FC<HistoryProps> = ({ lang }) => {
   return (
-    <section id="journal" className="py-20 border-t border-brand-rose-dust/30 dark:border-brand-plum-muted/20">
+    <motion.section
+      id="journal"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="py-24"
+    >
       
       {/* Editorial Page Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -379,6 +387,6 @@ export const History: React.FC<HistoryProps> = ({ lang }) => {
 
       </div>
 
-    </section>
+    </motion.section>
   );
 };
