@@ -109,7 +109,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["Web Development", "Frontend", "Database"],
       github: "https://github.com/ahdfarhaan0852/barokahgroup-web",
-      demo: "https://github.com/ahdfarhaan0852/barokahgroup-web",
+      demo: "https://barokahgroup-web.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -120,7 +120,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["Tailwind CSS", "Community Platform", "UI/UX Design"],
       github: "https://github.com/ahdfarhaan0852/mminoritystrength-web",
-      demo: "https://github.com/ahdfarhaan0852/mminoritystrength-web",
+      demo: "https://mminoritystrength-web.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -131,7 +131,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["E-Commerce Showcase", "Frontend Dev", "Creative Design"],
       github: "https://github.com/ahdfarhaan0852/teszta-world",
-      demo: "https://github.com/ahdfarhaan0852/teszta-world",
+      demo: "https://teszta-world.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -142,7 +142,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["SaaS Platform", "Booking System", "Realtime Scheduling"],
       github: "https://github.com/ahdfarhaan0852/sedboypku-web",
-      demo: "https://github.com/ahdfarhaan0852/sedboypku-web",
+      demo: "https://sedboypku-web.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -153,7 +153,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["Corporate Web", "Construction Showcase", "Infrastructure Tech"],
       github: "https://github.com/ahdfarhaan0852/sbhconstruction-web",
-      demo: "https://github.com/ahdfarhaan0852/sbhconstruction-web",
+      demo: "https://sbhconstruction-web.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -164,7 +164,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "utility",
       badges: ["Productivity App", "Task Management", "CRUD System"],
       github: "https://github.com/ahdfarhaan0852/daily-planner",
-      demo: "https://github.com/ahdfarhaan0852/daily-planner",
+      demo: "https://daily-planner.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     },
@@ -186,7 +186,7 @@ export const Projects: React.FC<ProjectsProps> = ({ lang }) => {
       category: "web",
       badges: ["Web Catalog", "Branding", "Frontend Showcase"],
       github: "https://github.com/ahdfarhaan0852/alifparcel-web",
-      demo: "https://github.com/ahdfarhaan0852/alifparcel-web",
+      demo: "https://alifparcel-web.vercel.app",
       demoLabelID: "Demo Proyek",
       demoLabelEN: "Project Demo"
     }
