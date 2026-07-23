@@ -1,19 +1,18 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { AdaptiveDpr, Preload, ScrollControls } from "@react-three/drei";
+import { AdaptiveDpr, Preload } from "@react-three/drei";
 
 export const CanvasLoader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const canvasStyle: React.CSSProperties = {
-    position: "absolute",
+    position: "fixed",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    width: "100%",
-    height: "100%",
-    overflow: "hidden",
+    width: "100vw",
+    height: "100vh",
+    pointerEvents: "auto",
+    zIndex: 0,
   };
 
   const noiseOverlayStyle: React.CSSProperties = {
@@ -25,7 +24,7 @@ export const CanvasLoader: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <div className="h-screen w-full relative overflow-hidden bg-[#08080a]" ref={containerRef} style={noiseOverlayStyle}>
+    <div className="w-full relative bg-[#08080a]" style={noiseOverlayStyle}>
       <Canvas
         className="base-canvas"
         shadows
@@ -36,9 +35,7 @@ export const CanvasLoader: React.FC<{ children: React.ReactNode }> = ({ children
           <ambientLight intensity={0.8} />
           <directionalLight position={[10, 15, 10]} intensity={1.2} />
 
-          <ScrollControls pages={4} damping={0.4} maxSpeed={1} distance={1} style={{ zIndex: 1 }}>
-            {children}
-          </ScrollControls>
+          {children}
 
           <Preload all />
         </Suspense>
