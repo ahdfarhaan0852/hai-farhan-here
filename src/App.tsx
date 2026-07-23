@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { About } from "./components/About";
-import { Projects } from "./components/Projects";
 import { Skills } from "./components/Skills";
 import { History } from "./components/History";
 import { LiquidRevealHero } from "./components/LiquidRevealHero";
@@ -193,13 +192,7 @@ function App() {
       <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
         {/* ABOUT SECTION */}
         <About lang={lang} />
-      </div>
 
-      {/* PROJECTS SECTION - Fullscreen 3D Viewport */}
-      <Projects lang={lang} />
-
-      {/* PORTFOLIO CONTENT WRAPPER CONTINUED */}
-      <div className="max-w-6xl mx-auto px-6 sm:px-12 lg:px-24">
         {/* SKILLS SECTION */}
         <Skills lang={lang} />
 
